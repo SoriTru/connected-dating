@@ -5,6 +5,7 @@ import styles from "./styles/App.module.css";
 
 import Start from "./components/Start";
 import Login from "./components/Login";
+import Signup from "./components/Signup";
 
 class App extends Component {
   render() {
@@ -14,6 +15,7 @@ class App extends Component {
           <Switch>
             <Route exact path="/" component={Start} />
             <Route exact path="/login" component={Login} />
+            <Route exact path="/signup" component={Signup} />
           </Switch>
         </div>
       </Router>

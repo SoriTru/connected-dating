@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
+import {Link} from "react-router-dom";
 
 import styles from '../styles/Start.module.css'
 
 import logo from "../images/filler-logo.jpeg";
 import footer_image from "../images/filler1.jpeg";
-
-
 
 class Start extends Component {
     render() {
@@ -15,11 +14,8 @@ class Start extends Component {
                     {/* logo */}
                     <img src={logo} className={styles.logo_image}/>
 
-                    {/* sign up */}
-                    <button className={styles.button}>Sign Up</button>
-
-                    {/* log in */}
-                    <button className={styles.button}>Log In</button>
+                    <Link to="/signup" className={styles.button}>Sign Up</Link>
+                    <Link to="/login" className={styles.button}>Log In</Link>
 
 
                 </div>
