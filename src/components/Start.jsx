@@ -20,8 +20,8 @@ class Start extends Component {
 
                 </div>
                 <div className={styles.footer}>
-                    {/* TODO: set up footer details*/}
-                    <img src={footer_image} className={styles.footer_image}/>
+                    <Link to="/about" className={styles.link}>About</Link>
+                    <Link to="/terms" className={styles.link}>Terms</Link>
                 </div>
             </div>
         )
