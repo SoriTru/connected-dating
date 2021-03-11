@@ -6,12 +6,14 @@ import styles from "./styles/App.module.css";
 import Start from "./components/Start";
 import Login from "./components/Login";
 import Signup from "./components/Signup";
+import Home from "./components/Home";
 
 class App extends Component {
   render() {
     return (
       <Router>
         <div className={styles.app_container}>
+          <Route exact path="/home" component={Home} />
           <Switch>
             <Route exact path="/" component={Start} />
             <Route exact path="/login" component={Login} />

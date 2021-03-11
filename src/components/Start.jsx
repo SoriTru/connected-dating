@@ -11,7 +11,11 @@ class Start extends Component {
       <div className={styles.container}>
         <div className={styles.main}>
           {/* logo */}
-          <img src={logo} className={styles.logo_image} />
+          <img
+            alt="remove me and put a logo here"
+            src={logo}
+            className={styles.logo_image}
+          />
 
           <Link to="/signup" className={styles.button}>
             Sign Up

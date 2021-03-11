@@ -2,11 +2,11 @@ import React, { Component } from "react";
 import firebase from "firebase/app";
 import "firebase/auth";
 
-import styles from "../styles/Signup.module.css";
+import styles from "../styles/Authenticate.module.css";
 
 class Signup extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
     this.state = {
       input: {},
@@ -21,9 +21,7 @@ class Signup extends Component {
     let input = this.state.input;
     input[event.target.name] = event.target.value;
 
-    this.setState({
-      input,
-    });
+    this.setState({ input });
   }
 
   handleSubmit(event) {
@@ -43,8 +41,13 @@ class Signup extends Component {
           this.setState({
             input: { email: "", password: "", confirm_password: "" },
           });
-          // send user on to home page
+          // send user to home page
           this.props.history.push("/home");
+        })
+        .catch((error) => {
+          // TODO: process error and alert user
+          console.log(error.code);
+          console.log(error.message);
         });
     }
   }
@@ -76,9 +79,7 @@ class Signup extends Component {
       errors["confirm_password"] = "Passwords must match!";
     }
 
-    this.setState({
-      errors: errors,
-    });
+    this.setState({ errors: errors });
 
     return isValid;
   }
