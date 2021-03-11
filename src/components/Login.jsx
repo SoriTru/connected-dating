@@ -27,8 +27,6 @@ class Login extends Component {
   handleSubmit(event) {
     event.preventDefault();
 
-    console.log(firebase.auth().currentUser);
-
     // check for valid email
     if (this.validate(event)) {
       // log user in
@@ -43,9 +41,6 @@ class Login extends Component {
           this.setState({
             input: { email: "", password: "", confirm_password: "" },
           });
-
-          // send user to home page
-          this.props.history.push("/home");
         })
         .catch((error) => {
           // TODO: process error and alert user

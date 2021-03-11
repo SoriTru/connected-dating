@@ -1,5 +1,10 @@
 import React, { Component } from "react";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Route,
+  Switch,
+  Redirect,
+} from "react-router-dom";
 
 import styles from "./styles/App.module.css";
 
@@ -7,17 +12,42 @@ import Start from "./components/Start";
 import Login from "./components/Login";
 import Signup from "./components/Signup";
 import Home from "./components/Home";
+import firebase from "firebase/app";
+import "firebase/auth";
 
 class App extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      user: null,
+    };
+  }
+
+  componentDidMount = () => {
+    firebase.auth().onAuthStateChanged((userAuth) => {
+      this.setState({ user: userAuth });
+    });
+  };
+
   render() {
     return (
       <Router>
         <div className={styles.app_container}>
-          <Route exact path="/home" component={Home} />
           <Switch>
-            <Route exact path="/" component={Start} />
-            <Route exact path="/login" component={Login} />
-            <Route exact path="/signup" component={Signup} />
+            <Route exact path="/">
+              {this.state.user ? <Home user={this.state.user} /> : <Start />}
+            </Route>
+            <Route exact path="/login">
+              {this.state.user ? (
+                <Redirect to="/" />
+              ) : (
+                <Login user={this.state.user} />
+              )}
+            </Route>
+            <Route exact path="/signup">
+              {this.state.user ? <Redirect to="/" /> : <Signup />}
+            </Route>
           </Switch>
         </div>
       </Router>

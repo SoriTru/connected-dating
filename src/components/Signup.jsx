@@ -41,8 +41,6 @@ class Signup extends Component {
           this.setState({
             input: { email: "", password: "", confirm_password: "" },
           });
-          // send user to home page
-          this.props.history.push("/home");
         })
         .catch((error) => {
           // TODO: process error and alert user
