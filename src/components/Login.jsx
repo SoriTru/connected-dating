@@ -1,14 +1,9 @@
-import React, { Component } from 'react';
-
-import logo from '../images/filler-logo.jpeg'
+import React, { Component } from "react";
 
 class Login extends Component {
-    render() {
-        return (
-            <p>Testing</p>
-
-        )
-    }
+  render() {
+    return <p>Testing</p>;
+  }
 }
 
 export default Login;
