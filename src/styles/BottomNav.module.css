@@ -1,0 +1,10 @@
+.nav_container {
+  height: 10vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.nav_item {
+  padding: 1em;
+}
