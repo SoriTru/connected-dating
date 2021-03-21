@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import commonStyles from "../styles/Common.module.css";
 import styles from "../styles/Start.module.css";
 
-import logo from "../images/filler-logo.jpeg";
+import logo from "../images/cnd_plain_logo.png";
 
 class Start extends Component {
   render() {
