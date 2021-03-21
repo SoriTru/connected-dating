@@ -1,4 +1,20 @@
-.back_arrow {
+.left {
   height: 3em;
-  padding: 1em 2em;
+  width: 3em;
+  margin: 1em 2em;
+}
+
+.center {
+}
+
+.right {
+  height: 3em;
+  width: 3em;
+  margin: 1em 2em;
+}
+
+.container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }

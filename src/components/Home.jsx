@@ -1,36 +1,30 @@
 import React, { Component } from "react";
 import { Route, Switch } from "react-router-dom";
 
-import firebase from "firebase/app";
-import "firebase/auth";
-
 import styles from "../styles/Home.module.css";
 
 import BottomNav from "./BottomNav";
 import TopNav from "./TopNav";
 
 class Home extends Component {
-  logOut = () => {
-    firebase
-      .auth()
-      .signOut()
-      .then(function () {
-        // success
-      })
-      .catch(function (error) {
-        console.error(error);
-      });
-  };
+  constructor(props) {
+    super(props);
+
+    this.state = { path: window.location.pathname, title: "Home" };
+  }
+
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    console.log(window.location.pathname);
+  }
 
   render() {
     return (
       <div className={styles.container}>
-        <TopNav />
+        <TopNav path={this.state.path} title={this.state.title} />
         <div className={styles.main}>
           <Switch>
             <Route exact path="/home">
-              <p>Home!</p>
-              <button onClick={this.logOut}>Sign out</button>
+              Home
             </Route>
             <Route exact path="/home/dates">
               Dates
@@ -41,7 +35,9 @@ class Home extends Component {
             <Route exact path="/home/chat">
               Chat
             </Route>
-            <Route path="/home/profile">Profile</Route>
+            <Route exact path="/home/profile">
+              Profile
+            </Route>
           </Switch>
         </div>
 
