@@ -13,19 +13,19 @@ class BottomNav extends Component {
   render() {
     return (
       <div className={styles.nav_container}>
-        <Link to="/date" className={styles.nav_item}>
+        <Link to="/home/dates" className={styles.nav_item}>
           <img src={dateIcon} className={styles.icon} alt="Date" />
         </Link>
-        <Link to="/video" className={styles.nav_item}>
+        <Link to="/home/video" className={styles.nav_item}>
           <img src={videoIcon} className={styles.icon} alt="Video" />
         </Link>
-        <Link to="/" className={styles.nav_item}>
+        <Link to="/home" className={styles.nav_item}>
           <img src={homeIcon} className={styles.icon} alt="Home" />
         </Link>
-        <Link to="/chat" className={styles.nav_item}>
+        <Link to="/home/chat" className={styles.nav_item}>
           <img src={chatIcon} className={styles.icon} alt="Chat" />
         </Link>
-        <Link to="/profile" className={styles.nav_item}>
+        <Link to="/home/profile" className={styles.nav_item}>
           <img src={profileIcon} className={styles.icon} alt="Profile" />
         </Link>
       </div>
