@@ -36,17 +36,20 @@ class App extends Component {
         <div className={styles.app_container}>
           <Switch>
             <Route exact path="/">
-              {this.state.user ? <Home user={this.state.user} /> : <Start />}
+              {this.state.user ? <Redirect to="/home" /> : <Start />}
             </Route>
             <Route exact path="/login">
-              {this.state.user ? (
-                <Redirect to="/" />
-              ) : (
-                <Login user={this.state.user} />
-              )}
+              {this.state.user ? <Redirect to="/home" /> : <Login />}
             </Route>
             <Route exact path="/signup">
-              {this.state.user ? <Redirect to="/" /> : <Signup />}
+              {this.state.user ? <Redirect to="/home" /> : <Signup />}
+            </Route>
+            <Route path="/home">
+              {this.state.user ? (
+                <Home user={this.state.user} />
+              ) : (
+                <Redirect to="/" />
+              )}
             </Route>
           </Switch>
         </div>

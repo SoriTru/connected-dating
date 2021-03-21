@@ -1,10 +1,13 @@
 import React, { Component } from "react";
+import { Route, Switch } from "react-router-dom";
+
 import firebase from "firebase/app";
 import "firebase/auth";
 
-import commonStyles from "../styles/Common.module.css";
+import styles from "../styles/Home.module.css";
 
 import BottomNav from "./BottomNav";
+import TopNav from "./TopNav";
 
 class Home extends Component {
   logOut = () => {
@@ -21,12 +24,28 @@ class Home extends Component {
 
   render() {
     return (
-      <div className={commonStyles.container}>
-        <div className={commonStyles.main}>
-          <p>Home!</p>
-          <button onClick={this.logOut}>Sign out</button>
+      <div className={styles.container}>
+        <TopNav />
+        <div className={styles.main}>
+          <Switch>
+            <Route exact path="/home">
+              <p>Home!</p>
+              <button onClick={this.logOut}>Sign out</button>
+            </Route>
+            <Route exact path="/home/dates">
+              Dates
+            </Route>
+            <Route exact path="/home/video">
+              Video
+            </Route>
+            <Route exact path="/home/chat">
+              Chat
+            </Route>
+            <Route path="/home/profile">Profile</Route>
+          </Switch>
         </div>
-        <BottomNav page={"date"} />
+
+        <BottomNav />
       </div>
     );
   }

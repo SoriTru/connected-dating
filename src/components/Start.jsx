@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 
-import commonStyles from "../styles/Common.module.css";
 import styles from "../styles/Start.module.css";
 
 import logo from "../images/cnd_plain_logo.png";
@@ -9,8 +8,8 @@ import logo from "../images/cnd_plain_logo.png";
 class Start extends Component {
   render() {
     return (
-      <div className={commonStyles.container}>
-        <div className={commonStyles.main}>
+      <div className={styles.container}>
+        <div className={styles.main}>
           {/* logo */}
           <img
             alt="remove me and put a logo here"
