@@ -13,11 +13,11 @@ class Login extends Component {
       errors: {},
     };
 
-    this.handleChange = this.handleChange.bind(this);
+    // this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  handleChange(event) {
+  handleChange = (event) => {
     let input = this.state.input;
     input[event.target.name] = event.target.value;
 
