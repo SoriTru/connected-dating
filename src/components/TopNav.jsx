@@ -1,8 +1,8 @@
-import React, { Component } from "react";
+import React, {Component} from "react";
 
 import styles from "../styles/TopNav.module.css";
 import backArrow from "../images/backarrow.png";
-import { Link } from "react-router-dom";
+import {Link, withRouter} from "react-router-dom";
 import firebase from "firebase/app";
 import "firebase/auth";
 
@@ -20,13 +20,14 @@ class TopNav extends Component {
   };
 
   render() {
+    const {location} = this.props;
     let leftButton;
     let centerText;
     let rightButton;
 
     if (this.props.path === "/home") {
-      leftButton = <Link to="/home/settings">Settings</Link>;
-      centerText = <div />;
+      leftButton = <Link to="/home">Our Title</Link>;
+      centerText = <div >{location.pathname} </div>;
       rightButton = (
         <button onClick={this.logOut} className={styles.right}>
           Log out
@@ -56,4 +57,4 @@ class TopNav extends Component {
   }
 }
 
-export default TopNav;
+export default withRouter(TopNav);
