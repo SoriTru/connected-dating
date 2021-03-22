@@ -5,6 +5,7 @@ import styles from "../styles/Home.module.css";
 
 import BottomNav from "./BottomNav";
 import TopNav from "./TopNav";
+import Profile from "./Profile";
 
 class Home extends Component {
   constructor(props) {
@@ -40,7 +41,7 @@ class Home extends Component {
               Chat
             </Route>
             <Route exact path="/home/profile">
-              Profile
+              <Profile />
             </Route>
           </Switch>
         </div>

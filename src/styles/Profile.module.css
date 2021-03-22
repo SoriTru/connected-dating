@@ -1,0 +1,31 @@
+.profile_container {
+  display: grid;
+  width: 80%;
+  margin: 1em;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: auto 1fr 2fr 4fr 1fr;
+  grid-template-areas:
+    "pic name name"
+    "pic basic basic"
+    "photos photos photos"
+    "interests interests interests"
+    "buttons buttons buttons";
+  overflow-y: auto;
+}
+
+.profile_pic {
+  grid-area: pic;
+  justify-self: center;
+  align-self: center;
+  width: 2em;
+  height: 2em;
+}
+
+.name {
+  grid-area: name;
+}
+
+.basic {
+  grid-area: basic;
+  margin: 0;
+}
