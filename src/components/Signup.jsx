@@ -12,19 +12,16 @@ class Signup extends Component {
       input: {},
       errors: {},
     };
-
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  handleChange(event) {
+  handleChange = (event) => {
     let input = this.state.input;
     input[event.target.name] = event.target.value;
 
     this.setState({ input });
-  }
+  };
 
-  handleSubmit(event) {
+  handleSubmit = (event) => {
     event.preventDefault();
 
     // check for valid email/password
@@ -36,19 +33,13 @@ class Signup extends Component {
           this.state.input.email,
           this.state.input.password
         )
-        .then(() => {
-          // clear state
-          this.setState({
-            input: { email: "", password: "", confirm_password: "" },
-          });
-        })
         .catch((error) => {
           // TODO: process error and alert user
           console.log(error.code);
           console.log(error.message);
         });
     }
-  }
+  };
 
   validate(event) {
     let input = this.state.input;
@@ -93,7 +84,6 @@ class Signup extends Component {
               <input
                 type="email"
                 name="email"
-                // value={this.state.input.username}
                 onChange={this.handleChange}
                 className={styles.form_input}
                 placeholder="Enter your email"
@@ -109,7 +99,6 @@ class Signup extends Component {
               <input
                 type="password"
                 name="password"
-                // value={this.state.input.password}
                 onChange={this.handleChange}
                 className={styles.form_input}
                 placeholder="*********"

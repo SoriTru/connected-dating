@@ -12,9 +12,6 @@ class Login extends Component {
       input: {},
       errors: {},
     };
-
-    // this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   handleChange = (event) => {
@@ -24,7 +21,7 @@ class Login extends Component {
     this.setState({ input });
   };
 
-  handleSubmit(event) {
+  handleSubmit = (event) => {
     event.preventDefault();
 
     // check for valid email
@@ -36,19 +33,13 @@ class Login extends Component {
           this.state.input.email,
           this.state.input.password
         )
-        .then(() => {
-          // clear state
-          this.setState({
-            input: { email: "", password: "", confirm_password: "" },
-          });
-        })
         .catch((error) => {
           // TODO: process error and alert user
           console.log(error.code);
           console.log(error.message);
         });
     }
-  }
+  };
 
   validate(event) {
     let input = this.state.input;
