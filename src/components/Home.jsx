@@ -10,7 +10,11 @@ class Home extends Component {
   constructor(props) {
     super(props);
 
-    this.state = { path: window.location.pathname, title: "Home", isShowingVideo: false};
+    this.state = {
+      path: window.location.pathname,
+      title: "Home",
+      isShowingVideo: false,
+    };
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -41,7 +45,7 @@ class Home extends Component {
           </Switch>
         </div>
 
-        <BottomNav isShowingVideo={this.state.isShowingVideo}/>
+        <BottomNav isShowingVideo={this.state.isShowingVideo} />
       </div>
     );
   }

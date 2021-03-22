@@ -22,7 +22,7 @@ class Login extends Component {
     input[event.target.name] = event.target.value;
 
     this.setState({ input });
-  }
+  };
 
   handleSubmit(event) {
     event.preventDefault();

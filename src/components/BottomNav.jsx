@@ -11,9 +11,9 @@ import profileIcon from "../images/nav_icons/cnd_nav_profile.png";
 
 class BottomNav extends Component {
   render() {
-      if (this.props.isShowingVideo) {
-          return <div></div>;
-      }
+    if (this.props.isShowingVideo) {
+      return <div></div>;
+    }
     return (
       <div className={styles.nav_container}>
         <Link to="/home/dates" className={styles.nav_item}>

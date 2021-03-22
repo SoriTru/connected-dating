@@ -1,13 +1,14 @@
-.left {
+.logo {
   height: 3em;
   width: 3em;
   margin: 1em 2em;
 }
 
-.center {
+.title {
+  font-size: 2em;
 }
 
-.right {
+.logout {
   height: 3em;
   width: 3em;
   margin: 1em 2em;
