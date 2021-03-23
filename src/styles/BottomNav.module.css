@@ -1,5 +1,4 @@
 .nav_container {
-  height: 10vh;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -10,6 +9,6 @@
 }
 
 .icon {
-  width: 2em;
-  height: 2em;
+  width: 1.9em;
+  height: 1.9em;
 }
