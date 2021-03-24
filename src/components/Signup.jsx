@@ -95,12 +95,16 @@ class Signup extends Component {
       // set default color to black if user didn't set their color
       let userColor = this.state.color ? this.state.color : "#000000";
 
+      // parse interests from comma separated string
+      let userInterests = this.state.input.interests.split(",");
+
       // submit form
       let userObject = {
         firebase_uuid: this.props.user.uid,
         first_name: this.state.input.first_name,
         last_initial: this.state.input.last_initial,
         zipcode: this.state.input.zipcode,
+        interests: userInterests,
         birthdate: this.state.input.birthdate,
         gender: this.state.input.gender,
         looking_for: this.state.input.looking_for,
@@ -121,7 +125,7 @@ class Signup extends Component {
         this.setState({ profileIsSaved: true });
       } else {
         // TODO: account for specific errors here
-        alert("Error in comminucating with server!");
+        alert("Error in communicating with server!");
         console.log(server_response);
       }
     }
@@ -139,6 +143,7 @@ class Signup extends Component {
       "birthdate",
       "gender",
       "looking_for",
+      "interests",
     ];
     for (const form of required_forms) {
       if (!input[form] || input[form] === "") {
@@ -206,6 +211,20 @@ class Signup extends Component {
                 <div className={styles.text_danger}>
                   {this.state.errors.zipcode}
                 </div>
+              </div>
+
+              <div>
+                <label htmlFor="interests">
+                  What are your interests? <br /> (separate by commas)
+                </label>
+                <br />
+                <textarea
+                  rows="4"
+                  cols="30"
+                  name="interests"
+                  onChange={this.handleChange}
+                  placeholder="kites, SpongeBob, surfing, rocks"
+                />
               </div>
 
               <div>
