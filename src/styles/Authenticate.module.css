@@ -51,3 +51,12 @@ label {
   color: #df183d;
   text-decoration: underline;
 }
+
+.profile_options {
+  display: flex;
+  flex-direction: column;
+}
+
+.option_title {
+  text-align: center;
+}

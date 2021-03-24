@@ -42,7 +42,7 @@ class App extends Component {
               {this.state.user ? <Redirect to="/home" /> : <Login />}
             </Route>
             <Route exact path="/signup">
-              {this.state.user ? <Redirect to="/home" /> : <Signup />}
+              {this.state.user ? <Signup user={this.state.user} /> : <Signup />}
             </Route>
             <Route path="/home">
               {this.state.user ? (
