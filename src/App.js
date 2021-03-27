@@ -6,12 +6,12 @@ import {
   Redirect,
 } from "react-router-dom";
 
-import styles from "./styles/App.module.css";
+import styles from "./App.module.css";
 
-import Start from "./components/Start";
-import Login from "./components/Login";
-import Signup from "./components/Signup";
-import Home from "./components/Home";
+import Start from "./components/Start/Start";
+import Login from "./components/Login/Login";
+import Signup from "./components/Signup/Signup";
+import Home from "./components/Home/Home";
 import firebase from "firebase/app";
 import "firebase/auth";
 

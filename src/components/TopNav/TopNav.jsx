@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 
-import styles from "../styles/TopNav.module.css";
-import logo from "../images/cnd_plain_logo.png";
+import styles from "./TopNav.module.css";
+import logo from "../../images/cnd_plain_logo.png";
 import { Link, withRouter } from "react-router-dom";
 import firebase from "firebase/app";
 import "firebase/auth";

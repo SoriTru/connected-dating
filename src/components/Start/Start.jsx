@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 
-import styles from "../styles/Start.module.css";
+import styles from "./Start.module.css";
 
-import logo from "../images/cnd_plain_logo.png";
+import logo from "../../images/cnd_plain_logo.png";
 
 class Start extends Component {
   render() {

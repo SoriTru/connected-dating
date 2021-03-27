@@ -1,11 +1,11 @@
 import React, { Component } from "react";
 import { Route, Switch } from "react-router-dom";
 
-import styles from "../styles/Home.module.css";
+import styles from "./Home.module.css";
 
-import BottomNav from "./BottomNav";
-import TopNav from "./TopNav";
-import Profile from "./Profile";
+import BottomNav from "../BottomNav/BottomNav";
+import TopNav from "../TopNav/TopNav";
+import Profile from "../Profile/Profile";
 
 class Home extends Component {
   constructor(props) {

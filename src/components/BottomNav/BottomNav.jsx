@@ -1,13 +1,13 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 
-import styles from "../styles/BottomNav.module.css";
+import styles from "./BottomNav.module.css";
 
-import dateIcon from "../images/nav_icons/cnd_nav_date.png";
-import videoIcon from "../images/nav_icons/cnd_nav_video.png";
-import homeIcon from "../images/nav_icons/cnd_nav_home.png";
-import chatIcon from "../images/nav_icons/cnd_nav_chat.png";
-import profileIcon from "../images/nav_icons/cnd_nav_profile.png";
+import dateIcon from "../../images/nav_icons/cnd_nav_date.png";
+import videoIcon from "../../images/nav_icons/cnd_nav_video.png";
+import homeIcon from "../../images/nav_icons/cnd_nav_home.png";
+import chatIcon from "../../images/nav_icons/cnd_nav_chat.png";
+import profileIcon from "../../images/nav_icons/cnd_nav_profile.png";
 
 class BottomNav extends Component {
   render() {

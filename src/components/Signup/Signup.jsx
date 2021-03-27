@@ -3,7 +3,7 @@ import { Redirect } from "react-router-dom";
 import firebase from "firebase/app";
 import "firebase/auth";
 
-import styles from "../styles/Authenticate.module.css";
+import styles from "./Signup.module.css";
 
 class Signup extends Component {
   constructor(props) {

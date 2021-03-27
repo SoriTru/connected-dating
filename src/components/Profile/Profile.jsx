@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 
-import styles from "../styles/Profile.module.css";
-import profileImage from "../images/nav_icons/cnd_nav_profile.png";
+import styles from "./Profile.module.css";
+import profileImage from "../../images/nav_icons/cnd_nav_profile.png";
 
 class Profile extends Component {
   render() {
