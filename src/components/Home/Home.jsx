@@ -6,6 +6,7 @@ import styles from "./Home.module.css";
 import BottomNav from "../BottomNav/BottomNav";
 import TopNav from "../TopNav/TopNav";
 import Profile from "../Profile/Profile";
+import Chat from "../Chat/Chat";
 
 class Home extends Component {
   constructor(props) {
@@ -38,7 +39,7 @@ class Home extends Component {
               Video
             </Route>
             <Route exact path="/home/chat">
-              Chat
+              <Chat user={this.props.user} />
             </Route>
             <Route exact path="/home/profile">
               <Profile />

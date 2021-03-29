@@ -1,6 +1,6 @@
 .profile_container {
   display: grid;
-  height: calc(100% - 2em);
+  height: 100%;
   width: 80%;
   margin: 1em;
   grid-template-columns: 1fr 1fr 1fr;

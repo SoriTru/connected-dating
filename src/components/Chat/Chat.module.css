@@ -1,0 +1,89 @@
+.chat_box {
+  width: 80%;
+  height: 100%;
+  border: 1px solid red;
+}
+
+.message_container {
+  display: grid;
+  width: 100%;
+  min-height: 100%;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr auto;
+  grid-template-areas:
+    "messages"
+    "input";
+}
+
+.main {
+  grid-area: messages;
+  overflow: scroll;
+}
+
+.message {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.message_text {
+  padding: 10px 20px;
+  border-radius: 25px;
+  text-align: center;
+  width: 80%;
+  margin: 0;
+}
+
+.sent {
+  flex-direction: row-reverse;
+}
+
+.sent p {
+  color: white;
+  background-color: #0b93f6;
+}
+.received p {
+  background-color: #e5e5ea;
+  color: black;
+}
+
+.profile_image {
+  width: 3em;
+  height: 3em;
+  padding: 0.25em;
+  border-radius: 50%;
+  margin: 0.25em;
+}
+
+.text_form {
+  grid-area: input;
+  width: 100%;
+}
+
+.form_input {
+  height: 2em;
+  width: 80%;
+  font-size: 1.25rem;
+  outline: none;
+  border: none;
+  padding: 0 10px;
+}
+
+.form_submit {
+  background-color: #282c34; /* Green */
+  border: none;
+  color: white;
+  height: 2em;
+  width: 20%;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  cursor: pointer;
+  font-size: 1.25rem;
+  padding: 0;
+}
+
+.form_submit:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
