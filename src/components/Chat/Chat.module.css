@@ -9,10 +9,15 @@
   height: 100%;
   width: 80%;
   grid-template-columns: 1fr;
-  grid-template-rows: 1fr auto;
+  grid-template-rows: min-content 1fr auto;
   grid-template-areas:
+    "buttons"
     "messages"
     "input";
+}
+
+.button_area {
+  grid-area: buttons;
 }
 
 .overflow_container {

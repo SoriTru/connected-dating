@@ -187,6 +187,22 @@ class Chat extends Component {
     // return a specific chat
     return (
       <div className={styles.chat_box}>
+        <div className={styles.button_area}>
+          <button
+            onClick={() => {
+              this.setState({ isOverview: true });
+            }}
+          >
+            Go Back
+          </button>
+          <button
+            onClick={() => {
+              alert("Matched! Well, not really (yet)");
+            }}
+          >
+            Match
+          </button>
+        </div>
         <div className={styles.overflow_container}>
           {this.state.messageData && this.renderMessages()}
         </div>
