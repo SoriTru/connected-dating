@@ -7,6 +7,7 @@ import BottomNav from "../BottomNav/BottomNav";
 import TopNav from "../TopNav/TopNav";
 import Profile from "../Profile/Profile";
 import Chat from "../Chat/Chat";
+import VideoChatContainer from "../VideoChat/VideoChatContainer";
 
 class Home extends Component {
   constructor(props) {
@@ -36,7 +37,7 @@ class Home extends Component {
               Dates
             </Route>
             <Route exact path="/home/video">
-              Video
+              <VideoChatContainer user={this.props.user} />
             </Route>
             <Route exact path="/home/chat">
               <Chat user={this.props.user} />
