@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import firebase from "firebase/app";
 import "firebase/firestore";
+import "webrtc-adapter";
 
 import VideoChat from "./VideoChat";
 import {
@@ -94,7 +95,6 @@ class VideoChatContainer extends Component {
   };
 
   handleUpdate = (notif, fromUid) => {
-    console.log(notif);
     if (notif) {
       switch (notif.type) {
         case "offer":

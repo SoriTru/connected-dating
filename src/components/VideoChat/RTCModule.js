@@ -77,7 +77,7 @@ export const sendAnswer = async (
     conn.addStream(localStream);
 
     // set the remote and local descriptions and create an answer
-    console.log(notif.offer);
+    console.log(notif);
     const offer = JSON.parse(notif.offer);
     conn.setRemoteDescription(offer);
 

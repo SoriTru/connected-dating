@@ -8,7 +8,7 @@ export const listen = async (uid, handleUpdate, notifsRef) => {
 export const doOffer = async (toUid, offer, fromUid, notifsRef) => {
   await notifsRef
     .doc(toUid)
-    .set({ type: "offer", from: fromUid, answer: JSON.stringify(offer) });
+    .set({ type: "offer", from: fromUid, offer: JSON.stringify(offer) });
 };
 
 export const doAnswer = async (toUid, answer, fromUid, notifsRef) => {
