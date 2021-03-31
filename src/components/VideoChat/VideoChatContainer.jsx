@@ -44,12 +44,11 @@ class VideoChatContainer extends Component {
   };
 
   shouldComponentUpdate(nextProps, nextState) {
-    // prevent rerenders if not necessary
-    if (this.state.localStream !== nextState.localStream) {
-      return false;
-    }
-
-    if (this.state.localConnection !== nextState.localConnection) {
+    // prevent unnecessary rerenders
+    if (
+      this.state.localStream !== nextState.localStream ||
+      this.state.localConnection !== nextState.localConnection
+    ) {
       return false;
     }
 

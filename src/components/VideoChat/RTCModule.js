@@ -28,6 +28,7 @@ export const initiateLocalStream = async () => {
     console.error(exception);
   }
 };
+
 export const initiateConnection = async () => {
   try {
     // create a connection
