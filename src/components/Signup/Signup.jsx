@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Redirect } from "react-router-dom";
 import firebase from "firebase/app";
 import "firebase/auth";
+import "firebase/firestore";
 
 import styles from "./Signup.module.css";
 
@@ -19,6 +20,7 @@ class Signup extends Component {
   handleChange = (event) => {
     let input = this.state.input;
     input[event.target.name] = event.target.value;
+    console.log(event.target.value);
 
     this.setState({ input });
   };
@@ -85,7 +87,7 @@ class Signup extends Component {
       // get city and state from zipcode
       const ZIP_API_KEY = process.env.REACT_APP_ZIPCODE_API_KEY;
       const zip_response = await fetch(
-        `https://api.zip-codes.com/ZipCodesAPI.svc/1.0/QuickGetZipCodeDetails/${this.state.zipcode}?key=${ZIP_API_KEY}`
+        `https://api.zip-codes.com/ZipCodesAPI.svc/1.0/QuickGetZipCodeDetails/${this.state.input.zipcode}?key=${ZIP_API_KEY}`
       );
       const data = await zip_response.json();
 
@@ -93,14 +95,15 @@ class Signup extends Component {
       let userState = data.State;
 
       // set default color to black if user didn't set their color
-      let userColor = this.state.color ? this.state.color : "#000000";
+      let userColor = this.state.input.color
+        ? this.state.input.color
+        : "#000000";
 
       // parse interests from comma separated string
       let userInterests = this.state.input.interests.split(",");
 
-      // submit form
-      let userObject = {
-        firebase_uuid: this.props.user.uid,
+      // post data to Firebase
+      let userData = {
         first_name: this.state.input.first_name,
         last_initial: this.state.input.last_initial,
         zipcode: this.state.input.zipcode,
@@ -113,21 +116,18 @@ class Signup extends Component {
         city: userCity,
       };
 
-      const server_response = await fetch("/user", {
-        method: "POST",
-        body: JSON.stringify(userObject),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      await firebase
+        .firestore()
+        .collection("users")
+        .doc(this.props.user.uid)
+        .set(
+          {
+            userData: userData,
+          },
+          { merge: true }
+        );
 
-      if (server_response.status === 200) {
-        this.setState({ profileIsSaved: true });
-      } else {
-        // TODO: account for specific errors here
-        alert("Error in communicating with server!");
-        console.log(server_response);
-      }
+      this.setState({ profileIsSaved: true });
     }
   };
 
