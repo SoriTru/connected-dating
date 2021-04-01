@@ -1,25 +1,21 @@
-export const addUserToQueue = async (uid, firestore) => {
-  let matchData = await firestore
-    .collection("match")
-    .doc("north_america")
-    .get();
+export const addUserToQueue = async (uid, firestore, fieldValue) => {
+  // get user data
   let userData = await firestore.collection("users").doc(uid).get();
 
-  if (matchData.exists && userData.exists) {
-    // get queue and user data
-    let queue = matchData.queue;
-    // append user id and user data
-    queue.append(uid);
+  if (userData.exists) {
+    // add user data to firebase match colelction
+    let matchUpdate = { queue: fieldValue.arrayUnion(uid) };
+    matchUpdate[`user_data.${uid}`] = userData.data().userData;
 
-    // add user data
-    await matchRef.update({});
+    await firestore
+      .collection("match")
+      .doc("north_america")
+      .update(matchUpdate);
 
-    // update document with new queue
     // NOTE: I'm not sure how firebase will handle multiple updates at the same time,
     // so this could result in errors
-    await matchRef.update({
-      queue: queue,
-    });
+  } else {
+    console.warn("Unable to add user to queue!");
   }
 };
 

@@ -10,11 +10,16 @@ class Roulette extends Component {
 
     this.state = {
       firestore: firebase.firestore(),
+      firestoreFieldValue: firebase.firestore.FieldValue,
     };
   }
   componentDidMount = async () => {
     // add user to firebase queue
-    await addUserToQueue(this.props.user.uid, this.state.firestore);
+    await addUserToQueue(
+      this.props.user.uid,
+      this.state.firestore,
+      this.state.firestoreFieldValue
+    );
 
     // listen to queue changes and do matching
   };
