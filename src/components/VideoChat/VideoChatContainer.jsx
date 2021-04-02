@@ -47,7 +47,8 @@ class VideoChatContainer extends Component {
     // prevent unnecessary rerenders
     if (
       this.state.localStream !== nextState.localStream ||
-      this.state.localConnection !== nextState.localConnection
+      this.state.localConnection !== nextState.localConnection ||
+      this.state.firestore !== nextState.firestore
     ) {
       return false;
     }
