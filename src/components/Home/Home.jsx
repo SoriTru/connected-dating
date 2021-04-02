@@ -3,7 +3,7 @@ import { Route, Switch } from "react-router-dom";
 
 import styles from "./Home.module.css";
 
-import BottomNav from "../BottomNav/BottomNav";
+import BottomNav from "BottomNavigator/BottomNavigator";
 import TopNav from "../TopNav/TopNav";
 import Profile from "../Profile/Profile";
 import Chat from "../Chat/Chat";
