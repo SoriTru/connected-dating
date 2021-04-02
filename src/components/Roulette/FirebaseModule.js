@@ -1,16 +1,16 @@
-export const addUserToQueue = async (uid, firestore, fieldValue) => {
+export const addUserToQueue = async (uid, firestore, firestoreFieldValue) => {
   // get user data
   let userData = await firestore.collection("users").doc(uid).get();
 
   if (userData.exists) {
     // add user data to firebase match colelction
-    let matchUpdate = { queue: fieldValue.arrayUnion(uid) };
-    matchUpdate[`user_data.${uid}`] = userData.data().userData;
+    let queueUpdate = { queue: firestoreFieldValue.arrayUnion(uid) };
+    queueUpdate[`user_data.${uid}`] = userData.data().userData;
 
     await firestore
       .collection("match")
       .doc("north_america")
-      .update(matchUpdate);
+      .update(queueUpdate);
 
     // NOTE: I'm not sure how firebase will handle multiple updates at the same time,
     // so this could result in errors
@@ -20,3 +20,14 @@ export const addUserToQueue = async (uid, firestore, fieldValue) => {
 };
 
 export const listenToQueue = async (uid, matchRef) => {};
+
+export const removeUserFromQueue = async (
+  uid,
+  firestore,
+  firestoreFieldValue
+) => {
+  let queueUpdate = { queue: firestoreFieldValue.arrayRemove(uid) };
+  queueUpdate[`user_data.${uid}`] = firestoreFieldValue.delete();
+
+  await firestore.collection("match").doc("north_america").update(queueUpdate);
+};

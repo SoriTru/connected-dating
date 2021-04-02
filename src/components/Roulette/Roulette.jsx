@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import firebase from "firebase/app";
 import "firebase/firestore";
 
-import { addUserToQueue } from "./FirebaseModule";
+import { addUserToQueue, removeUserFromQueue } from "./FirebaseModule";
 
 class Roulette extends Component {
   constructor(props) {
@@ -22,6 +22,15 @@ class Roulette extends Component {
     );
 
     // listen to queue changes and do matching
+  };
+
+  componentWillUnmount = async () => {
+    // remove user from firebase queue
+    await removeUserFromQueue(
+      this.props.user.uid,
+      this.state.firestore,
+      this.state.firestoreFieldValue
+    );
   };
 
   render() {
