@@ -19,6 +19,7 @@ class Roulette extends Component {
       isMatched: false,
       matchTitle: "Awaiting match...",
       matchedUser: null,
+      unsubscribeFromSnapshot: null,
     };
   }
   componentDidMount = async () => {
@@ -30,7 +31,7 @@ class Roulette extends Component {
     );
 
     // listen to queue changes and do matching
-    await listenToQueue(
+    this.state.unsubscribeFromSnapshot = await listenToQueue(
       this.props.user.uid,
       this.state.firestore,
       this.handleQueueChange
@@ -44,6 +45,8 @@ class Roulette extends Component {
       this.state.firestore,
       this.state.firestoreFieldValue
     );
+
+    this.state.unsubscribeFromSnapshot();
   };
 
   shouldComponentUpdate(nextProps, nextState, nextContext) {
@@ -51,11 +54,18 @@ class Roulette extends Component {
     if (this.state.firestore !== nextState.firestore) {
       return false;
     }
+    return true;
   }
 
   handleQueueChange = async (queueData) => {
     // if user is matched, do nothing
-    if ((this.state.isMatched = true)) {
+    if (this.state.isMatched) {
+      return;
+    }
+
+    // if user is not in queue, assume user is matched
+    if (!queueData.queue.includes(this.props.user.uid)) {
+      this.setState({ matched: true });
       return;
     }
 
@@ -86,7 +96,7 @@ class Roulette extends Component {
 
     for (let i = 0; i < potentialMatches.length; i++) {
       // calculate match points
-      let matchUserData = queueData.user_data.uid;
+      let matchUserData = queueData.user_data[potentialMatches[i]];
       let points = await this.calculatePointTotal(
         currentUserData,
         matchUserData
@@ -115,7 +125,7 @@ class Roulette extends Component {
 
     // 3 points for each coinciding interest
     const sharedInterests = currentUserData.interests.filter((interest) =>
-      matchUserData.includes(interest)
+      matchUserData.interests.includes(interest)
     );
     points += sharedInterests.length * 3;
 
@@ -176,12 +186,20 @@ class Roulette extends Component {
     });
   };
 
+  endVideoCall = () => {
+    this.setState({
+      matched: false,
+    });
+  };
+
   render() {
     return (
       <VideoChatContainer
+        user={this.props.user}
         matched={this.state.matched}
         matchTitle={this.state.matchTitle}
         matchedUser={this.state.matchedUser}
+        endVideoCall={this.endVideoCall}
       />
     );
   }

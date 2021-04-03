@@ -30,18 +30,32 @@ class VideoChatContainer extends Component {
     this.localVideoRef = React.createRef();
     this.remoteVideoRef = React.createRef();
   }
+
   componentDidMount = async () => {
     // get local video stream
     const localStream = await initiateLocalStream();
+    // TODO: figure out why this doesn't work and fix
     this.localVideoRef.srcObject = localStream;
 
     // create the local connection
     const localConnection = await initiateConnection();
+
     this.setState({
       localStream: localStream,
       localConnection: localConnection,
     });
+
+    //  listen for incoming video connection
+    await this.listen();
   };
+
+  componentWillUnmount() {
+    // remove audio and video stream
+    this.state.localStream &&
+      this.state.localStream.getVideoTracks().forEach(function (track) {
+        track.stop();
+      });
+  }
 
   shouldComponentUpdate(nextProps, nextState) {
     // prevent unnecessary rerenders
@@ -137,13 +151,16 @@ class VideoChatContainer extends Component {
   };
 
   render() {
+    if (!this.props.matched) {
+      return <p>{this.props.matchTitle}</p>;
+    }
+
     return (
       <VideoChat
         startCall={this.initiateCall}
-        listen={this.listen}
         setLocalVideoRef={this.setLocalVideoRef}
         setRemoteVideoRef={this.setRemoteVideoRef}
-        connectedUser={this.state.connectedUser}
+        connectedUser={this.props.matchedUser}
         user={this.props.user}
       />
     );

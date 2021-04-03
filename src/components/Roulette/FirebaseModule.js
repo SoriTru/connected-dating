@@ -21,7 +21,7 @@ export const addUserToQueue = async (uid, firestore, firestoreFieldValue) => {
 
 export const listenToQueue = async (uid, firestore, handleQueueChange) => {
   // listen to changes in the queue
-  await firestore
+  return await firestore
     .collection("match")
     .doc("north_america")
     .onSnapshot((snapshot) => {
