@@ -63,7 +63,7 @@ export const listenToConnectionEvents = (
   };
   // when a remote user adds stream to the peer connection, we display it
   conn.ontrack = function (event) {
-    if (remoteVideoRef.srcObject !== event.streams[0]) {
+    if (remoteVideoRef && remoteVideoRef.srcObject !== event.streams[0]) {
       remoteVideoRef.srcObject = event.streams[0];
     }
   };
@@ -100,12 +100,12 @@ export const sendAnswer = async (
   }
 };
 
-export const beginCall = (conn, notif) => {
+export const beginCall = (connection, notif) => {
   // it should be called when we
   // received an answer from other peer to start the call
   // and set remote the description
   const answer = JSON.parse(notif.answer);
-  conn.setRemoteDescription(answer);
+  connection.setRemoteDescription(answer);
 };
 
 export const addCandidate = (connection, notif) => {

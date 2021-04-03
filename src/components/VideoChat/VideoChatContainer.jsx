@@ -31,6 +31,7 @@ class VideoChatContainer extends Component {
       localConnection: null,
       connectedUser: "",
       firebaseRef: firebase.firestore().collection("notifs"),
+      unsubscribeFromSnapshot: null,
     };
 
     this.localVideoRef = React.createRef();
@@ -51,7 +52,15 @@ class VideoChatContainer extends Component {
     });
 
     //  listen for incoming video connection
-    await this.listen();
+    let unsubscribeFromSnapshot = await listen(
+      this.props.user.uid,
+      this.handleUpdate,
+      this.state.firebaseRef
+    );
+
+    this.setState({
+      unsubscribeFromSnapshot: unsubscribeFromSnapshot,
+    });
   };
 
   componentWillUnmount() {
@@ -60,6 +69,8 @@ class VideoChatContainer extends Component {
       this.state.localStream.getTracks().forEach(function (track) {
         track.stop();
       });
+
+    this.state.unsubscribeFromSnapshot();
   }
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -94,14 +105,6 @@ class VideoChatContainer extends Component {
       doOffer,
       this.state.firebaseRef,
       fromUid
-    );
-  };
-
-  listen = async () => {
-    await listen(
-      this.props.user.uid,
-      this.handleUpdate,
-      this.state.firebaseRef
     );
   };
 

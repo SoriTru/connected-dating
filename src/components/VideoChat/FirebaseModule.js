@@ -1,6 +1,6 @@
 export const listen = async (uid, handleUpdate, notifsRef) => {
   // set up snapshot to listen for changes to connection things
-  notifsRef.doc(uid).onSnapshot((snapshot) => {
+  return await notifsRef.doc(uid).onSnapshot((snapshot) => {
     snapshot.exists && handleUpdate(snapshot.data(), uid);
   });
 };

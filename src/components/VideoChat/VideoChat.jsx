@@ -16,10 +16,10 @@ export default class VideoChat extends Component {
                   )
                 }
               >
-                click me to start call
+                start call
               </button>
               <button onClick={async () => await this.props.endCall()}>
-                click me to end call
+                end call
               </button>
             </div>
           ) : (

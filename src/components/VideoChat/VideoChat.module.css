@@ -3,7 +3,7 @@
   height: 100%;
   width: 80%;
   grid-template-columns: 1fr;
-  grid-template-rows: auto 1fr 1fr;
+  grid-template-rows: min-content auto 1fr;
   grid-template-areas:
     "buttons"
     "remotevid"
