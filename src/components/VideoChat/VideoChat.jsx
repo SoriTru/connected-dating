@@ -1,10 +1,11 @@
 import React, { Component } from "react";
+import styles from "./VideoChat.module.css";
 
 export default class VideoChat extends Component {
   render() {
     return (
-      <div>
-        <div>
+      <div className={styles.container}>
+        <div className={styles.buttons}>
           {this.props.connectedUser ? (
             <div>
               <button
@@ -24,11 +25,23 @@ export default class VideoChat extends Component {
           ) : (
             <div></div>
           )}
-
-          <video ref={this.props.setLocalVideoRef} muted autoPlay playsInline />
         </div>
-        <div>
-          <video ref={this.props.setRemoteVideoRef} autoPlay playsInline />
+        <div className={styles.remotevideo}>
+          <video
+            ref={this.props.setRemoteVideoRef}
+            autoPlay
+            playsInline
+            className={styles.video}
+          />
+        </div>
+        <div className={styles.localvideo}>
+          <video
+            ref={this.props.setLocalVideoRef}
+            muted
+            autoPlay
+            playsInline
+            className={styles.video}
+          />
         </div>
       </div>
     );

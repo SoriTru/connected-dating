@@ -165,7 +165,6 @@ class VideoChatContainer extends Component {
 
   endVideoCall = async () => {
     // if call originator, alert other user of end call
-    console.log(this.props.matchedUser);
     if (this.props.matchedUser) {
       await doEndCall(
         this.props.user.uid,
@@ -178,11 +177,11 @@ class VideoChatContainer extends Component {
     await this.state.localConnection.close();
 
     // get new local connection
-    // let newLocalConnection = await initiateConnection();
-    // this.setState({
-    //   localConnection: newLocalConnection,
-    //   connectedUser: "",
-    // });
+    let newLocalConnection = await initiateConnection();
+    this.setState({
+      localConnection: newLocalConnection,
+      connectedUser: "",
+    });
 
     // call props function to end video call
     await this.props.endVideoCall();
