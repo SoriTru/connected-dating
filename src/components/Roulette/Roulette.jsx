@@ -65,7 +65,7 @@ class Roulette extends Component {
 
     // if user is not in queue, assume user is matched
     if (!queueData.queue.includes(this.props.user.uid)) {
-      this.setState({ matched: true });
+      this.setState({ isMatched: true });
       return;
     }
 
@@ -162,7 +162,7 @@ class Roulette extends Component {
   startVideoCall = async (matchUid) => {
     // set state to matched so that handleQueue doesn't run again
     this.setState({
-      matched: true,
+      isMatched: true,
     });
 
     // remove matched user from queue
@@ -181,22 +181,28 @@ class Roulette extends Component {
 
     // start video call
     this.setState({
-      matched: true,
+      isMatched: true,
       matchedUser: matchUid,
     });
   };
 
-  endVideoCall = () => {
+  endVideoCall = async () => {
     this.setState({
-      matched: false,
+      isMatched: false,
     });
+
+    await addUserToQueue(
+      this.props.user.uid,
+      this.state.firestore,
+      this.state.firestoreFieldValue
+    );
   };
 
   render() {
     return (
       <VideoChatContainer
         user={this.props.user}
-        matched={this.state.matched}
+        matched={this.state.isMatched}
         matchTitle={this.state.matchTitle}
         matchedUser={this.state.matchedUser}
         endVideoCall={this.endVideoCall}

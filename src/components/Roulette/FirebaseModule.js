@@ -16,6 +16,7 @@ export const addUserToQueue = async (uid, firestore, firestoreFieldValue) => {
     // so this could result in errors
   } else {
     console.warn("Unable to add user to queue!");
+    alert("Must set up profile first! Please navigate to /signup");
   }
 };
 

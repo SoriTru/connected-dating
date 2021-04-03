@@ -7,7 +7,11 @@ export const createOffer = async (
   fromUid
 ) => {
   try {
-    connection.addStream(localStream);
+    if (!connection.localDescription) {
+      for (const track of localStream.getTracks()) {
+        connection.addTrack(track, localStream);
+      }
+    }
 
     const offer = await connection.createOffer();
     await connection.setLocalDescription(offer);
@@ -66,7 +70,7 @@ export const listenToConnectionEvents = (
 };
 
 export const sendAnswer = async (
-  conn,
+  connection,
   localStream,
   notif,
   firebaseRef,
@@ -75,15 +79,19 @@ export const sendAnswer = async (
 ) => {
   try {
     // add the localstream to the connection
-    conn.addStream(localStream);
+    if (!connection.localDescription) {
+      for (const track of localStream.getTracks()) {
+        connection.addTrack(track, localStream);
+      }
+    }
 
     // set the remote and local descriptions and create an answer
     const offer = JSON.parse(notif.offer);
-    conn.setRemoteDescription(offer);
+    connection.setRemoteDescription(offer);
 
     // create an answer to an offer
-    const answer = await conn.createAnswer();
-    conn.setLocalDescription(answer);
+    const answer = await connection.createAnswer();
+    connection.setLocalDescription(answer);
 
     // send answer to the other peer
     doAnswer(notif.from, answer, fromUid, firebaseRef);
@@ -100,8 +108,10 @@ export const beginCall = (conn, notif) => {
   conn.setRemoteDescription(answer);
 };
 
-export const addCandidate = (conn, notif) => {
+export const addCandidate = (connection, notif) => {
   // apply the new received candidate to the connection
-  const candidate = JSON.parse(notif.candidate);
-  conn.addIceCandidate(new RTCIceCandidate(candidate));
+  if (connection.localDescription) {
+    const candidate = JSON.parse(notif.candidate);
+    connection.addIceCandidate(new RTCIceCandidate(candidate));
+  }
 };
