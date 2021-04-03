@@ -1,13 +1,12 @@
 .chat_overview {
   width: 80%;
   height: 100%;
-  /*border: 1px solid red;*/
 }
 
 .chat_box {
   display: grid;
-  height: 100%;
   width: 80%;
+  height: 100%;
   grid-template-columns: 1fr;
   grid-template-rows: min-content 1fr auto;
   grid-template-areas:
