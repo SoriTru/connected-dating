@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import styles from "./VideoChat.module.css";
 
 export default class VideoChat extends Component {
   render() {
@@ -15,18 +14,15 @@ export default class VideoChat extends Component {
                 )
               }
             >
-              {" "}
               click me to start call
             </button>
           ) : (
             <div></div>
           )}
 
-          <label>{this.props.user.uid}</label>
-          <video ref={this.props.setLocalVideoRef} autoPlay playsInline />
+          <video ref={this.props.setLocalVideoRef} muted autoPlay playsInline />
         </div>
         <div>
-          <label>{this.props.connectedUser}</label>
           <video ref={this.props.setRemoteVideoRef} autoPlay playsInline />
         </div>
       </div>

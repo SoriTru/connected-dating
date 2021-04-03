@@ -51,7 +51,7 @@ class VideoChatContainer extends Component {
   componentWillUnmount() {
     // remove audio and video stream
     this.state.localStream &&
-      this.state.localStream.getVideoTracks().forEach(function (track) {
+      this.state.localStream.getTracks().forEach(function (track) {
         track.stop();
       });
   }
