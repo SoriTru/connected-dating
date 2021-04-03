@@ -35,7 +35,6 @@ class VideoChatContainer extends Component {
     // get local video stream
     const localStream = await initiateLocalStream();
     // TODO: figure out why this doesn't work and fix
-    this.localVideoRef.srcObject = localStream;
 
     // create the local connection
     const localConnection = await initiateConnection();
@@ -101,7 +100,12 @@ class VideoChatContainer extends Component {
   };
 
   setLocalVideoRef = (ref) => {
+    if (!ref) {
+      return;
+    }
+
     this.localVideoRef = ref;
+    this.localVideoRef.srcObject = this.state.localStream;
   };
 
   setRemoteVideoRef = (ref) => {
