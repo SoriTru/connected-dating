@@ -14,7 +14,13 @@ import {
   addCandidate,
 } from "./RTCModule";
 
-import { doAnswer, doCandidate, doOffer, listen } from "./FirebaseModule";
+import {
+  doAnswer,
+  doCandidate,
+  doEndCall,
+  doOffer,
+  listen,
+} from "./FirebaseModule";
 
 class VideoChatContainer extends Component {
   constructor(props) {
@@ -147,11 +153,39 @@ class VideoChatContainer extends Component {
           // add candidate to our connection
           addCandidate(this.state.localConnection, notif);
           break;
+        case "terminate":
+          this.endVideoCall();
+          break;
         default:
           // nothing happens here
           break;
       }
     }
+  };
+
+  endVideoCall = async () => {
+    // if call originator, alert other user of end call
+    console.log(this.props.matchedUser);
+    if (this.props.matchedUser) {
+      await doEndCall(
+        this.props.user.uid,
+        this.props.matchedUser,
+        this.state.firebaseRef
+      );
+    }
+
+    // close rtc connection
+    await this.state.localConnection.close();
+
+    // get new local connection
+    // let newLocalConnection = await initiateConnection();
+    // this.setState({
+    //   localConnection: newLocalConnection,
+    //   connectedUser: "",
+    // });
+
+    // call props function to end video call
+    await this.props.endVideoCall();
   };
 
   render() {
@@ -166,6 +200,7 @@ class VideoChatContainer extends Component {
         setRemoteVideoRef={this.setRemoteVideoRef}
         connectedUser={this.props.matchedUser}
         user={this.props.user}
+        endCall={this.endVideoCall}
       />
     );
   }

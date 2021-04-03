@@ -6,16 +6,21 @@ export default class VideoChat extends Component {
       <div>
         <div>
           {this.props.connectedUser ? (
-            <button
-              onClick={async () =>
-                await this.props.startCall(
-                  this.props.user.uid,
-                  this.props.connectedUser
-                )
-              }
-            >
-              click me to start call
-            </button>
+            <div>
+              <button
+                onClick={async () =>
+                  await this.props.startCall(
+                    this.props.user.uid,
+                    this.props.connectedUser
+                  )
+                }
+              >
+                click me to start call
+              </button>
+              <button onClick={async () => await this.props.endCall()}>
+                click me to end call
+              </button>
+            </div>
           ) : (
             <div></div>
           )}

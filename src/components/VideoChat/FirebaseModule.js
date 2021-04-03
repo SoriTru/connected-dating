@@ -28,3 +28,11 @@ export const doCandidate = async (toUid, candidate, fromUid, notifsRef) => {
     candidate: JSON.stringify(candidate),
   });
 };
+
+export const doEndCall = async (fromUid, toUid, notifsRef) => {
+  // alert other user that call is ending
+  await notifsRef.doc(toUid).set({
+    type: "terminate",
+    from: fromUid,
+  });
+};
