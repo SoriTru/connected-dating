@@ -129,7 +129,6 @@ class VideoChatContainer extends Component {
       switch (notif.type) {
         case "offer":
           // let Roulette know we are connected, and to whom. This makes props propagate correctly
-          // TODO: this probably causes extra unnecessary renders and can be cleaned up
           this.props.connectCallback(notif.from);
           // listen to the connection events
           listenToConnectionEvents(
