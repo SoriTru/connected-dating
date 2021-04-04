@@ -24,14 +24,14 @@ import {
 } from "./FirebaseModule";
 
 class VideoChatContainer extends Component {
+  firebaseRef = firebase.firestore().collection("notifs");
+
   constructor(props) {
     super(props);
 
     this.state = {
       localStream: null,
       localConnection: null,
-      firebaseRef: firebase.firestore().collection("notifs"),
-      unsubscribeFromSnapshot: null,
     };
 
     this.remoteVideoRef = React.createRef();
@@ -44,16 +44,11 @@ class VideoChatContainer extends Component {
       localConnection: localConnection,
     });
 
-    //  listen for incoming video connection
-    let unsubFromNotifListener = await notifListen(
+    this.unsubFromNotifs = await notifListen(
       this.props.user.uid,
       this.handleUpdate,
-      this.state.firebaseRef
+      this.firebaseRef
     );
-
-    this.setState({
-      unsubscribeFromSnapshot: unsubFromNotifListener,
-    });
   };
 
   componentWillUnmount = async () => {
@@ -61,7 +56,7 @@ class VideoChatContainer extends Component {
     const otherUser = this.props.otherUser;
     if (otherUser != null && otherUser !== "") {
       // we are actually connected (not just pending), so we should try to disconnect
-      await doEndCall(this.props.user.uid, otherUser, this.state.firebaseRef);
+      await doEndCall(this.props.user.uid, otherUser, this.firebaseRef);
     }
 
     // remove audio and video stream
@@ -73,22 +68,15 @@ class VideoChatContainer extends Component {
     // close rtc connection
     await this.state.localConnection.close();
 
-    this.state.unsubscribeFromSnapshot();
+    this.unsubFromNotifs();
 
-    await clearNotifs(this.props.user.uid, this.state.firebaseRef);
+    await clearNotifs(this.props.user.uid, this.firebaseRef);
   };
 
-  // shouldComponentUpdate(nextProps, nextState) {
-  //   // prevent unnecessary rerenders
-  //   if (
-  //     this.state.localStream !== nextState.localStream ||
-  //     this.state.localConnection !== nextState.localConnection
-  //   ) {
-  //     return false;
-  //   }
-  //
-  //   return true;
-  // }
+  shouldComponentUpdate(nextProps, nextState) {
+    // only time to re-render is if we add or drop a remote connection
+    return this.props.otherUser !== nextProps.otherUser;
+  }
 
   initiateCall = async () => {
     const fromUid = this.props.user.uid;
@@ -99,7 +87,7 @@ class VideoChatContainer extends Component {
       fromUid,
       toUid,
       this.remoteVideoRef,
-      this.state.firebaseRef,
+      this.firebaseRef,
       doCandidate
     );
 
@@ -109,7 +97,7 @@ class VideoChatContainer extends Component {
       this.state.localStream,
       toUid,
       doOffer,
-      this.state.firebaseRef,
+      this.firebaseRef,
       fromUid
     );
   };
@@ -141,7 +129,6 @@ class VideoChatContainer extends Component {
       switch (notif.type) {
         case "offer":
           // let Roulette know we are connected, and to whom. This makes props propagate correctly
-          // TODO: this probably causes extra unnecessary renders and can be cleaned up
           this.props.connectCallback(notif.from);
           // listen to the connection events
           listenToConnectionEvents(
@@ -149,7 +136,7 @@ class VideoChatContainer extends Component {
             fromUid,
             notif.from,
             this.remoteVideoRef,
-            this.state.firebaseRef,
+            this.firebaseRef,
             doCandidate
           );
 
@@ -158,7 +145,7 @@ class VideoChatContainer extends Component {
             this.state.localConnection,
             this.state.localStream,
             notif,
-            this.state.firebaseRef,
+            this.firebaseRef,
             doAnswer,
             fromUid
           );
@@ -187,7 +174,7 @@ class VideoChatContainer extends Component {
     //   await doEndCall(
     //     this.props.user.uid,
     //     this.props.matchedUser,
-    //     this.state.firebaseRef
+    //     this.firebaseRef
     //   );
     // }
     //
