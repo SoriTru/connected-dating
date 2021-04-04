@@ -20,7 +20,7 @@ import {
   doCandidate,
   doEndCall,
   doOffer,
-  listen,
+  notifListen,
 } from "./FirebaseModule";
 
 class VideoChatContainer extends Component {
@@ -30,7 +30,6 @@ class VideoChatContainer extends Component {
     this.state = {
       localStream: null,
       localConnection: null,
-      connectedUser: "",
       firebaseRef: firebase.firestore().collection("notifs"),
       unsubscribeFromSnapshot: null,
     };
@@ -52,24 +51,24 @@ class VideoChatContainer extends Component {
     });
 
     //  listen for incoming video connection
-    let unsubscribeFromSnapshot = await listen(
+    let unsubFromNotifListener = await notifListen(
       this.props.user.uid,
       this.handleUpdate,
       this.state.firebaseRef
     );
 
     this.setState({
-      unsubscribeFromSnapshot: unsubscribeFromSnapshot,
+      unsubscribeFromSnapshot: unsubFromNotifListener,
     });
   };
 
   componentWillUnmount = async () => {
     // alert other user of end call
-    await doEndCall(
-      this.props.user.uid,
-      this.props.matchedUser,
-      this.state.firebaseRef
-    );
+    const otherUser = this.props.otherUser;
+    if (otherUser != null && otherUser !== "") {
+      // we are actually connected (not just pending), so we should try to disconnect
+      await doEndCall(this.props.user.uid, otherUser, this.state.firebaseRef);
+    }
 
     // remove audio and video stream
     this.state.localStream &&
@@ -97,7 +96,9 @@ class VideoChatContainer extends Component {
   //   return true;
   // }
 
-  initiateCall = async (fromUid, toUid) => {
+  initiateCall = async () => {
+    const fromUid = this.props.user.uid;
+    const toUid = this.props.otherUser;
     // listen to the events first
     listenToConnectionEvents(
       this.state.localConnection,
@@ -136,9 +137,9 @@ class VideoChatContainer extends Component {
     if (notif) {
       switch (notif.type) {
         case "offer":
-          this.setState({
-            connectedUser: notif.from,
-          });
+          // let Roulette know we are connected, and to whom. This makes props propagate correctly
+          // TODO: this probably causes extra unnecessary renders and can be cleaned up
+          this.props.connectCallback(notif.from);
           // listen to the connection events
           listenToConnectionEvents(
             this.state.localConnection,
@@ -207,7 +208,7 @@ class VideoChatContainer extends Component {
         startCall={this.initiateCall}
         setLocalVideoRef={this.setLocalVideoRef}
         setRemoteVideoRef={this.setRemoteVideoRef}
-        connectedUser={this.props.matchedUser}
+        connectedUser={this.props.otherUser}
         user={this.props.user}
         endCall={this.endVideoCall}
       />

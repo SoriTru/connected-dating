@@ -15,11 +15,10 @@ class Roulette extends Component {
 
     this.state = {
       firestore: firebase.firestore(),
-      firestoreFieldValue: firebase.firestore.FieldValue,
-      isMatched: false,
       matchTitle: "Awaiting match...",
       matchedUser: null,
-      unsubscribeFromSnapshot: null,
+      unsubFromQueueListener: null,
+      pendingConn: false,
     };
   }
   componentDidMount = async () => {
@@ -27,7 +26,7 @@ class Roulette extends Component {
     await addUserToQueue(this.props.user.uid, this.state.firestore);
 
     // listen to queue changes and do matching
-    this.state.unsubscribeFromSnapshot = await listenToQueue(
+    this.state.unsubFromQueueListener = await listenToQueue(
       this.props.user.uid,
       this.state.firestore,
       this.handleQueueChange
@@ -38,7 +37,7 @@ class Roulette extends Component {
     // remove user from firebase queue
     await removeUserFromQueue(this.props.user.uid, this.state.firestore);
 
-    this.state.unsubscribeFromSnapshot();
+    this.state.unsubFromQueueListener();
   };
 
   // shouldComponentUpdate(nextProps, nextState, nextContext) {
@@ -51,13 +50,13 @@ class Roulette extends Component {
 
   handleQueueChange = async (queueData) => {
     // if user is matched, do nothing
-    if (this.state.isMatched) {
+    if (this.state.matchedUser != null) {
       return;
     }
 
-    // if user is not in queue, assume user is matched
+    // if user is not in queue, assume user is being matched
     if (!queueData.queue.includes(this.props.user.uid)) {
-      this.setState({ isMatched: true });
+      this.setState({ pendingConn: true });
       return;
     }
 
@@ -102,6 +101,7 @@ class Roulette extends Component {
     }
 
     // match with user and start video call
+    this.setState({ matchedUser: bestMatch });
     await this.startVideoCall(bestMatch);
   };
 
@@ -152,11 +152,6 @@ class Roulette extends Component {
   };
 
   startVideoCall = async (matchUid) => {
-    // set state to matched so that handleQueue doesn't run again
-    this.setState({
-      isMatched: true,
-    });
-
     // remove matched user from queue
     await removeUserFromQueue(matchUid, this.state.firestore);
 
@@ -171,21 +166,25 @@ class Roulette extends Component {
 
   endVideoCall = async () => {
     this.setState({
-      isMatched: false,
       matchedUser: null,
     });
 
     await addUserToQueue(this.props.user.uid, this.state.firestore);
   };
 
+  onConnectionMade = (otherUid) => {
+    console.log(`VideoChatContainer made connection to ${otherUid}`);
+    this.setState({ matchedUser: otherUid });
+  };
+
   render() {
-    if (this.state.isMatched) {
+    if (this.state.matchedUser != null || this.state.pendingConn === true) {
       return (
         <VideoChatContainer
           user={this.props.user}
-          matched={this.state.isMatched}
-          matchedUser={this.state.matchedUser}
+          otherUser={this.state.matchedUser}
           endVideoCall={this.endVideoCall}
+          connectCallback={this.onConnectionMade}
         />
       );
     }
