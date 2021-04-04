@@ -7,7 +7,6 @@ import VideoChat from "./VideoChat";
 import {
   createOffer,
   initiateConnection,
-  initiateLocalStream,
   listenToConnectionEvents,
   sendAnswer,
   beginCall,
@@ -30,7 +29,6 @@ class VideoChatContainer extends Component {
     super(props);
 
     this.state = {
-      localStream: null,
       localConnection: null,
     };
 
@@ -60,8 +58,8 @@ class VideoChatContainer extends Component {
     }
 
     // remove audio and video stream
-    this.state.localStream &&
-      this.state.localStream.getTracks().forEach(function (track) {
+    this.localStream &&
+      this.localStream.getTracks().forEach(function (track) {
         track.stop();
       });
 
@@ -75,6 +73,7 @@ class VideoChatContainer extends Component {
   };
 
   shouldComponentUpdate(nextProps, nextState) {
+    // TODO: simplify state and props to allow for elimination of this entire function
     // only time to re-render is if we add or drop a remote connection
     return this.props.otherUser !== nextProps.otherUser;
   }
@@ -95,7 +94,7 @@ class VideoChatContainer extends Component {
     // create a new offer
     await createOffer(
       this.state.localConnection,
-      this.state.localStream,
+      this.localStream,
       toUid,
       doOffer,
       this.notifsRef,
@@ -103,22 +102,8 @@ class VideoChatContainer extends Component {
     );
   };
 
-  setLocalVideoRef = async (ref) => {
-    if (!ref) {
-      return;
-    }
-
-    // if the local media stream hasn't been initiated yet, do so and store it
-    // for subsequent video chats on this roulette
-    const localStream = this.state.localStream
-      ? this.state.localStream
-      : await initiateLocalStream();
-    if (!this.state.localStream) {
-      this.setState({ localStream: localStream });
-    }
-
-    // pass this media stream back to the <video> element
-    ref.srcObject = this.state.localStream;
+  setLocalStream = async (stream) => {
+    this.localStream = stream;
   };
 
   setRemoteVideoRef = (ref) => {
@@ -144,7 +129,7 @@ class VideoChatContainer extends Component {
           // send answer
           sendAnswer(
             this.state.localConnection,
-            this.state.localStream,
+            this.localStream,
             notif,
             this.notifsRef,
             doAnswer,
@@ -173,7 +158,7 @@ class VideoChatContainer extends Component {
     return (
       <VideoChat
         startCall={this.initiateCall}
-        setLocalVideoRef={this.setLocalVideoRef}
+        updateLocalStream={this.setLocalStream}
         setRemoteVideoRef={this.setRemoteVideoRef}
         connectedUser={this.props.otherUser}
         user={this.props.user}

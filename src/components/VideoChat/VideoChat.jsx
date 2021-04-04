@@ -1,7 +1,19 @@
 import React, { Component } from "react";
 import styles from "./VideoChat.module.css";
+import { initiateLocalStream } from "./RTCModule";
 
 export default class VideoChat extends Component {
+  setLocalStream = (videoRef) => {
+    if (!videoRef || videoRef.srcObject) {
+      // no need to update if there's not a ref yet, or if there's already a local stream
+      return;
+    }
+    initiateLocalStream().then((stream) => {
+      videoRef.srcObject = stream;
+      this.props.updateLocalStream(stream);
+    });
+  };
+
   render() {
     return (
       <div className={styles.container}>
@@ -29,7 +41,7 @@ export default class VideoChat extends Component {
         </div>
         <div className={styles.localvideo}>
           <video
-            ref={this.props.setLocalVideoRef}
+            ref={this.setLocalStream}
             muted
             autoPlay
             playsInline
