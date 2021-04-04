@@ -34,19 +34,13 @@ class VideoChatContainer extends Component {
       unsubscribeFromSnapshot: null,
     };
 
-    this.localVideoRef = React.createRef();
     this.remoteVideoRef = React.createRef();
   }
 
   componentDidMount = async () => {
-    // get local video stream
-    const localStream = await initiateLocalStream();
-
     // create the local connection
     const localConnection = await initiateConnection();
-
     this.setState({
-      localStream: localStream,
       localConnection: localConnection,
     });
 
@@ -120,13 +114,22 @@ class VideoChatContainer extends Component {
     );
   };
 
-  setLocalVideoRef = (ref) => {
+  setLocalVideoRef = async (ref) => {
     if (!ref) {
       return;
     }
 
-    this.localVideoRef = ref;
-    this.localVideoRef.srcObject = this.state.localStream;
+    // if the local media stream hasn't been initiated yet, do so and store it
+    // for subsequent video chats on this roulette
+    const localStream = this.state.localStream
+      ? this.state.localStream
+      : await initiateLocalStream();
+    if (!this.state.localStream) {
+      this.setState({ localStream: localStream });
+    }
+
+    // pass this media stream back to the <video> element
+    ref.srcObject = this.state.localStream;
   };
 
   setRemoteVideoRef = (ref) => {
