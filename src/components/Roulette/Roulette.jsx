@@ -19,6 +19,7 @@ class Roulette extends Component {
       pendingConn: false,
     };
     this.firestore = firebase.firestore();
+    this.decisionMillis = null;
   }
 
   componentDidMount = async () => {
@@ -66,6 +67,12 @@ class Roulette extends Component {
       return;
     }
 
+    const waitTime = 5 * 1000;
+    if (this.decisionMillis == null) {
+      console.log("reset decision millis (was null)");
+      this.decisionMillis = new Date().getTime() + waitTime;
+    }
+
     // if user is the only one in the queue, alert user and do nothing
     if (queueData.queue.length === 1) {
       this.setState({
@@ -78,6 +85,27 @@ class Roulette extends Component {
       });
     }
 
+    if (this.cancelQueueInterval) {
+      clearTimeout(this.cancelQueueInterval);
+    }
+    this.cancelQueueInterval = setTimeout(
+      () => this.handleQueueChange(queueData),
+      this.decisionMillis - new Date().getTime()
+    );
+
+    this.findMatch(queueData).then((match) => {
+      const currentTime = new Date().getTime();
+      if (currentTime > this.decisionMillis) {
+        console.log("starting a call with: ", match);
+        this.startCall(match);
+        this.decisionMillis = null;
+        clearTimeout(this.cancelQueueInterval);
+      }
+    });
+  };
+
+  findMatch = async (queueData) => {
+    console.log("entering findMatch with ", queueData);
     // calculate best match from users in queue
     let potentialMatches = queueData.queue.slice(1);
 
@@ -100,11 +128,14 @@ class Roulette extends Component {
         highestPoints = points;
       }
     }
+    return bestMatch;
+  };
 
+  async startCall(bestMatch) {
     // match with user and start video call
     this.setState({ matchedUser: bestMatch });
     await this.startVideoCall(bestMatch);
-  };
+  }
 
   calculatePointTotal = async (currentUserData, matchUserData) => {
     let points = 0;
