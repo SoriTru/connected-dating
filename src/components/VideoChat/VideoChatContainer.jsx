@@ -160,37 +160,13 @@ class VideoChatContainer extends Component {
           addCandidate(this.state.localConnection, notif);
           break;
         case "terminate":
-          this.endVideoCall();
+          this.props.endVideoCall();
           break;
         default:
           // nothing happens here
           break;
       }
     }
-  };
-
-  endVideoCall = async () => {
-    // // if call originator, alert other user of end call
-    // if (this.props.matchedUser) {
-    //   await doEndCall(
-    //     this.props.user.uid,
-    //     this.props.matchedUser,
-    //     this.firebaseRef
-    //   );
-    // }
-    //
-    // // close rtc connection
-    // await this.state.localConnection.close();
-
-    // // get new local connection
-    // let newLocalConnection = await initiateConnection();
-    // this.setState({
-    //   localConnection: newLocalConnection,
-    //   connectedUser: "",
-    // });
-
-    // call props function to end video call
-    await this.props.endVideoCall();
   };
 
   render() {
@@ -201,7 +177,7 @@ class VideoChatContainer extends Component {
         setRemoteVideoRef={this.setRemoteVideoRef}
         connectedUser={this.props.otherUser}
         user={this.props.user}
-        endCall={this.endVideoCall}
+        endCall={this.props.endVideoCall}
       />
     );
   }
