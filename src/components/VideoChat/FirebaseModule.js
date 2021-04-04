@@ -1,4 +1,4 @@
-export const listen = async (uid, handleUpdate, notifsRef) => {
+export const notifListen = async (uid, handleUpdate, notifsRef) => {
   // set up snapshot to listen for changes to connection things
   return await notifsRef.doc(uid).onSnapshot((snapshot) => {
     snapshot.exists && handleUpdate(snapshot.data(), uid);
@@ -30,6 +30,12 @@ export const doCandidate = async (toUid, candidate, fromUid, notifsRef) => {
 };
 
 export const doEndCall = async (fromUid, toUid, notifsRef) => {
+  if (toUid == null) {
+    console.error(
+      "Tried to doEndCall() with null toUid. Did a component get unmounted too early?"
+    );
+    return;
+  }
   // alert other user that call is ending
   await notifsRef.doc(toUid).set({
     type: "terminate",
