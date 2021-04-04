@@ -73,17 +73,10 @@ class VideoChatContainer extends Component {
     await clearNotifs(this.props.user.uid, this.firebaseRef);
   };
 
-  // shouldComponentUpdate(nextProps, nextState) {
-  //   // prevent unnecessary rerenders
-  //   if (
-  //     this.state.localStream !== nextState.localStream ||
-  //     this.state.localConnection !== nextState.localConnection
-  //   ) {
-  //     return false;
-  //   }
-  //
-  //   return true;
-  // }
+  shouldComponentUpdate(nextProps, nextState) {
+    // only time to re-render is if we add or drop a remote connection
+    return this.props.otherUser !== nextProps.otherUser;
+  }
 
   initiateCall = async () => {
     const fromUid = this.props.user.uid;
