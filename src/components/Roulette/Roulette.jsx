@@ -34,10 +34,11 @@ class Roulette extends Component {
   };
 
   componentWillUnmount = async () => {
+    // Stop listening for updates to prevent updating an unmounted component after
+    // we remove ourselves from the queue
+    await this.unsubFromQueueListener();
     // remove user from firebase queue
     await removeUserFromQueue(this.props.user.uid, this.firestore);
-
-    this.unsubFromQueueListener();
   };
 
   shouldComponentUpdate(nextProps, nextState, nextContext) {
