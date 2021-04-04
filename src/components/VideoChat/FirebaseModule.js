@@ -36,3 +36,7 @@ export const doEndCall = async (fromUid, toUid, notifsRef) => {
     from: fromUid,
   });
 };
+
+export const clearNotifs = async (uid, notifsRef) => {
+  await notifsRef.doc(uid).delete();
+};

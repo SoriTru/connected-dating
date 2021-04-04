@@ -49,13 +49,13 @@ class Roulette extends Component {
     this.state.unsubscribeFromSnapshot();
   };
 
-  shouldComponentUpdate(nextProps, nextState, nextContext) {
-    // prevent unnecessary rerenders
-    if (this.state.firestore !== nextState.firestore) {
-      return false;
-    }
-    return true;
-  }
+  // shouldComponentUpdate(nextProps, nextState, nextContext) {
+  //   // prevent unnecessary rerenders
+  //   if (this.state.firestore !== nextState.firestore) {
+  //     return false;
+  //   }
+  //   return true;
+  // }
 
   handleQueueChange = async (queueData) => {
     // if user is matched, do nothing
@@ -181,7 +181,6 @@ class Roulette extends Component {
 
     // start video call
     this.setState({
-      isMatched: true,
       matchedUser: matchUid,
     });
   };
@@ -189,6 +188,7 @@ class Roulette extends Component {
   endVideoCall = async () => {
     this.setState({
       isMatched: false,
+      matchedUser: null,
     });
 
     await addUserToQueue(
@@ -199,15 +199,18 @@ class Roulette extends Component {
   };
 
   render() {
-    return (
-      <VideoChatContainer
-        user={this.props.user}
-        matched={this.state.isMatched}
-        matchTitle={this.state.matchTitle}
-        matchedUser={this.state.matchedUser}
-        endVideoCall={this.endVideoCall}
-      />
-    );
+    if (this.state.isMatched) {
+      return (
+        <VideoChatContainer
+          user={this.props.user}
+          matched={this.state.isMatched}
+          matchedUser={this.state.matchedUser}
+          endVideoCall={this.endVideoCall}
+        />
+      );
+    }
+
+    return <div>{this.state.matchTitle}</div>;
   }
 }
 

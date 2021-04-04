@@ -23,7 +23,7 @@ export default class VideoChat extends Component {
               </button>
             </div>
           ) : (
-            <div></div>
+            <div />
           )}
         </div>
         <div className={styles.remotevideo}>

@@ -48,7 +48,7 @@ export const initiateConnection = async () => {
 };
 
 export const listenToConnectionEvents = (
-  conn,
+  connection,
   fromUid,
   toUid,
   remoteVideoRef,
@@ -56,13 +56,13 @@ export const listenToConnectionEvents = (
   doCandidate
 ) => {
   // listen for ice candidates
-  conn.onicecandidate = function (event) {
+  connection.onicecandidate = function (event) {
     if (event.candidate) {
       doCandidate(toUid, event.candidate, fromUid, firebaseRef);
     }
   };
   // when a remote user adds stream to the peer connection, we display it
-  conn.ontrack = function (event) {
+  connection.ontrack = function (event) {
     if (remoteVideoRef && remoteVideoRef.srcObject !== event.streams[0]) {
       remoteVideoRef.srcObject = event.streams[0];
     }
