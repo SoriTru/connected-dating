@@ -40,13 +40,13 @@ class Roulette extends Component {
     this.state.unsubFromQueueListener();
   };
 
-  // shouldComponentUpdate(nextProps, nextState, nextContext) {
-  //   // prevent unnecessary rerenders
-  //   if (this.state.firestore !== nextState.firestore) {
-  //     return false;
-  //   }
-  //   return true;
-  // }
+  shouldComponentUpdate(nextProps, nextState, nextContext) {
+    return (
+      this.state.matchTitle !== nextState.matchTitle ||
+      this.state.matchedUser !== nextState.matchedUser ||
+      this.pendingConn !== nextState.pendingConn
+    );
+  }
 
   handleQueueChange = async (queueData) => {
     // if user is matched, do nothing
