@@ -102,7 +102,7 @@ class VideoChatContainer extends Component {
     );
   };
 
-  setLocalStream = async (stream) => {
+  setLocalStream = (stream) => {
     this.localStream = stream;
   };
 
