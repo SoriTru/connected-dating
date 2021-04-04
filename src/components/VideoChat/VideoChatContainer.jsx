@@ -24,7 +24,7 @@ import {
 } from "./FirebaseModule";
 
 class VideoChatContainer extends Component {
-  firebaseRef = firebase.firestore().collection("notifs");
+  notifsRef = firebase.firestore().collection("notifs");
 
   constructor(props) {
     super(props);
@@ -47,7 +47,7 @@ class VideoChatContainer extends Component {
     this.unsubFromNotifs = await notifListen(
       this.props.user.uid,
       this.handleUpdate,
-      this.firebaseRef
+      this.notifsRef
     );
   };
 
@@ -56,7 +56,7 @@ class VideoChatContainer extends Component {
     const otherUser = this.props.otherUser;
     if (otherUser != null && otherUser !== "") {
       // we are actually connected (not just pending), so we should try to disconnect
-      await doEndCall(this.props.user.uid, otherUser, this.firebaseRef);
+      await doEndCall(this.props.user.uid, otherUser, this.notifsRef);
     }
 
     // remove audio and video stream
@@ -70,7 +70,8 @@ class VideoChatContainer extends Component {
 
     this.unsubFromNotifs();
 
-    await clearNotifs(this.props.user.uid, this.firebaseRef);
+    // delete any leftover notifications
+    await clearNotifs(this.props.user.uid, this.notifsRef);
   };
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -87,7 +88,7 @@ class VideoChatContainer extends Component {
       fromUid,
       toUid,
       this.remoteVideoRef,
-      this.firebaseRef,
+      this.notifsRef,
       doCandidate
     );
 
@@ -97,7 +98,7 @@ class VideoChatContainer extends Component {
       this.state.localStream,
       toUid,
       doOffer,
-      this.firebaseRef,
+      this.notifsRef,
       fromUid
     );
   };
@@ -136,7 +137,7 @@ class VideoChatContainer extends Component {
             fromUid,
             notif.from,
             this.remoteVideoRef,
-            this.firebaseRef,
+            this.notifsRef,
             doCandidate
           );
 
@@ -145,7 +146,7 @@ class VideoChatContainer extends Component {
             this.state.localConnection,
             this.state.localStream,
             notif,
-            this.firebaseRef,
+            this.notifsRef,
             doAnswer,
             fromUid
           );
