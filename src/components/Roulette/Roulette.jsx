@@ -167,6 +167,7 @@ class Roulette extends Component {
   endVideoCall = async () => {
     this.setState({
       matchedUser: null,
+      pendingConn: false,
     });
 
     await addUserToQueue(this.props.user.uid, this.firestore);
