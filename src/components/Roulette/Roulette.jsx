@@ -50,7 +50,7 @@ class Roulette extends Component {
     );
   }
 
-  handleQueueChange = async (queueData) => {
+  handleQueueChange = async (queueData, isRecursing = false) => {
     // if user is matched, do nothing
     if (this.state.matchedUser != null) {
       return;
@@ -84,14 +84,18 @@ class Roulette extends Component {
         matchTitle: "Awaiting match...",
       });
     }
+    console.log("in handlequeuechange");
 
     if (this.cancelQueueInterval) {
       clearTimeout(this.cancelQueueInterval);
     }
-    this.cancelQueueInterval = setTimeout(
-      () => this.handleQueueChange(queueData),
-      this.decisionMillis - new Date().getTime()
-    );
+    if (!isRecursing) {
+      console.log("not recursing");
+      this.cancelQueueInterval = setTimeout(
+        () => this.handleQueueChange(queueData, true),
+        this.decisionMillis - new Date().getTime()
+      );
+    }
 
     this.findMatch(queueData).then((match) => {
       const currentTime = new Date().getTime();
