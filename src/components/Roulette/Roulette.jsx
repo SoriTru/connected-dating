@@ -24,11 +24,7 @@ class Roulette extends Component {
   }
   componentDidMount = async () => {
     // add user to firebase queue
-    await addUserToQueue(
-      this.props.user.uid,
-      this.state.firestore,
-      this.state.firestoreFieldValue
-    );
+    await addUserToQueue(this.props.user.uid, this.state.firestore);
 
     // listen to queue changes and do matching
     this.state.unsubscribeFromSnapshot = await listenToQueue(
@@ -40,11 +36,7 @@ class Roulette extends Component {
 
   componentWillUnmount = async () => {
     // remove user from firebase queue
-    await removeUserFromQueue(
-      this.props.user.uid,
-      this.state.firestore,
-      this.state.firestoreFieldValue
-    );
+    await removeUserFromQueue(this.props.user.uid, this.state.firestore);
 
     this.state.unsubscribeFromSnapshot();
   };
@@ -166,18 +158,10 @@ class Roulette extends Component {
     });
 
     // remove matched user from queue
-    await removeUserFromQueue(
-      matchUid,
-      this.state.firestore,
-      this.state.firestoreFieldValue
-    );
+    await removeUserFromQueue(matchUid, this.state.firestore);
 
     // remove current user from queue
-    await removeUserFromQueue(
-      this.props.user.uid,
-      this.state.firestore,
-      this.state.firestoreFieldValue
-    );
+    await removeUserFromQueue(this.props.user.uid, this.state.firestore);
 
     // start video call
     this.setState({
@@ -191,11 +175,7 @@ class Roulette extends Component {
       matchedUser: null,
     });
 
-    await addUserToQueue(
-      this.props.user.uid,
-      this.state.firestore,
-      this.state.firestoreFieldValue
-    );
+    await addUserToQueue(this.props.user.uid, this.state.firestore);
   };
 
   render() {

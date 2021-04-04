@@ -1,10 +1,13 @@
-export const addUserToQueue = async (uid, firestore, firestoreFieldValue) => {
+import firebase from "firebase/app";
+const fieldValue = firebase.firestore.FieldValue;
+
+export const addUserToQueue = async (uid, firestore) => {
   // get user data
   let userData = await firestore.collection("users").doc(uid).get();
 
   if (userData.exists) {
     // add user data to firebase match collection
-    let queueUpdate = { queue: firestoreFieldValue.arrayUnion(uid) };
+    let queueUpdate = { queue: fieldValue.arrayUnion(uid) };
     queueUpdate[`user_data.${uid}`] = userData.data().userData;
 
     await firestore
@@ -30,13 +33,9 @@ export const listenToQueue = async (uid, firestore, handleQueueChange) => {
     });
 };
 
-export const removeUserFromQueue = async (
-  uid,
-  firestore,
-  firestoreFieldValue
-) => {
-  let queueUpdate = { queue: firestoreFieldValue.arrayRemove(uid) };
-  queueUpdate[`user_data.${uid}`] = firestoreFieldValue.delete();
+export const removeUserFromQueue = async (uid, firestore) => {
+  let queueUpdate = { queue: fieldValue.arrayRemove(uid) };
+  queueUpdate[`user_data.${uid}`] = fieldValue.delete();
 
   await firestore.collection("match").doc("north_america").update(queueUpdate);
 };
