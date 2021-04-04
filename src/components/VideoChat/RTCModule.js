@@ -22,9 +22,9 @@ export const createOffer = async (
   }
 };
 
-export const initiateLocalStream = async () => {
+export const initiateLocalStream = () => {
   try {
-    return await navigator.mediaDevices.getUserMedia({
+    return navigator.mediaDevices.getUserMedia({
       video: true,
       audio: true,
     });

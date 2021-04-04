@@ -7,7 +7,6 @@ import VideoChat from "./VideoChat";
 import {
   createOffer,
   initiateConnection,
-  initiateLocalStream,
   listenToConnectionEvents,
   sendAnswer,
   beginCall,
@@ -24,13 +23,12 @@ import {
 } from "./FirebaseModule";
 
 class VideoChatContainer extends Component {
-  firebaseRef = firebase.firestore().collection("notifs");
+  notifsRef = firebase.firestore().collection("notifs");
 
   constructor(props) {
     super(props);
 
     this.state = {
-      localStream: null,
       localConnection: null,
     };
 
@@ -47,7 +45,7 @@ class VideoChatContainer extends Component {
     this.unsubFromNotifs = await notifListen(
       this.props.user.uid,
       this.handleUpdate,
-      this.firebaseRef
+      this.notifsRef
     );
   };
 
@@ -56,12 +54,12 @@ class VideoChatContainer extends Component {
     const otherUser = this.props.otherUser;
     if (otherUser != null && otherUser !== "") {
       // we are actually connected (not just pending), so we should try to disconnect
-      await doEndCall(this.props.user.uid, otherUser, this.firebaseRef);
+      await doEndCall(this.props.user.uid, otherUser, this.notifsRef);
     }
 
     // remove audio and video stream
-    this.state.localStream &&
-      this.state.localStream.getTracks().forEach(function (track) {
+    this.localStream &&
+      this.localStream.getTracks().forEach(function (track) {
         track.stop();
       });
 
@@ -70,10 +68,12 @@ class VideoChatContainer extends Component {
 
     this.unsubFromNotifs();
 
-    await clearNotifs(this.props.user.uid, this.firebaseRef);
+    // delete any leftover notifications
+    await clearNotifs(this.props.user.uid, this.notifsRef);
   };
 
   shouldComponentUpdate(nextProps, nextState) {
+    // TODO: simplify state and props to allow for elimination of this entire function
     // only time to re-render is if we add or drop a remote connection
     return this.props.otherUser !== nextProps.otherUser;
   }
@@ -87,37 +87,23 @@ class VideoChatContainer extends Component {
       fromUid,
       toUid,
       this.remoteVideoRef,
-      this.firebaseRef,
+      this.notifsRef,
       doCandidate
     );
 
     // create a new offer
     await createOffer(
       this.state.localConnection,
-      this.state.localStream,
+      this.localStream,
       toUid,
       doOffer,
-      this.firebaseRef,
+      this.notifsRef,
       fromUid
     );
   };
 
-  setLocalVideoRef = async (ref) => {
-    if (!ref) {
-      return;
-    }
-
-    // if the local media stream hasn't been initiated yet, do so and store it
-    // for subsequent video chats on this roulette
-    const localStream = this.state.localStream
-      ? this.state.localStream
-      : await initiateLocalStream();
-    if (!this.state.localStream) {
-      this.setState({ localStream: localStream });
-    }
-
-    // pass this media stream back to the <video> element
-    ref.srcObject = this.state.localStream;
+  setLocalStream = (stream) => {
+    this.localStream = stream;
   };
 
   setRemoteVideoRef = (ref) => {
@@ -136,16 +122,16 @@ class VideoChatContainer extends Component {
             fromUid,
             notif.from,
             this.remoteVideoRef,
-            this.firebaseRef,
+            this.notifsRef,
             doCandidate
           );
 
           // send answer
           sendAnswer(
             this.state.localConnection,
-            this.state.localStream,
+            this.localStream,
             notif,
-            this.firebaseRef,
+            this.notifsRef,
             doAnswer,
             fromUid
           );
@@ -159,7 +145,7 @@ class VideoChatContainer extends Component {
           addCandidate(this.state.localConnection, notif);
           break;
         case "terminate":
-          this.endVideoCall();
+          this.props.endVideoCall();
           break;
         default:
           // nothing happens here
@@ -168,39 +154,15 @@ class VideoChatContainer extends Component {
     }
   };
 
-  endVideoCall = async () => {
-    // // if call originator, alert other user of end call
-    // if (this.props.matchedUser) {
-    //   await doEndCall(
-    //     this.props.user.uid,
-    //     this.props.matchedUser,
-    //     this.firebaseRef
-    //   );
-    // }
-    //
-    // // close rtc connection
-    // await this.state.localConnection.close();
-
-    // // get new local connection
-    // let newLocalConnection = await initiateConnection();
-    // this.setState({
-    //   localConnection: newLocalConnection,
-    //   connectedUser: "",
-    // });
-
-    // call props function to end video call
-    await this.props.endVideoCall();
-  };
-
   render() {
     return (
       <VideoChat
         startCall={this.initiateCall}
-        setLocalVideoRef={this.setLocalVideoRef}
+        updateLocalStream={this.setLocalStream}
         setRemoteVideoRef={this.setRemoteVideoRef}
         connectedUser={this.props.otherUser}
         user={this.props.user}
-        endCall={this.endVideoCall}
+        endCall={this.props.endVideoCall}
       />
     );
   }
