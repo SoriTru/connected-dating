@@ -1,22 +1,81 @@
 import React, { Component } from "react";
+import firebase from "firebase/app";
+import "firebase/auth";
+import "firebase/firestore";
 
 import styles from "./Profile.module.css";
 import profileImage from "../../images/nav_icons/cnd_nav_profile.png";
 
+const yearMillis = 365.25 * 24 * 60 * 60 * 1000;
+
 class Profile extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      userData: {},
+      placeholderData: {
+        first_name: '(Name)',
+        last_initial: '',
+        zipcode: '00000',
+        interests: ['(Interests)'],
+        birthdate: '00-00-0000',
+        gender: '(Gender)',
+        looking_for: '(Looking for)',
+        color: '000000',
+        state: '(State)',
+        city: '(City)',
+      },
+      profileIsLoaded: false
+    };
+  }
+
+  computeAge(dateString) {
+    //const [day, month, year] = dateString.split('-');
+    const birthDate = Date.parse(dateString); //Date.parse(`${year}-${month}-${day}`);
+    const diff = Date.now() - birthDate;
+    //console.log(day, month, year, dateString, birthDate, diff);
+    return Math.floor(diff / yearMillis)
+  }
+
+  componentDidMount() {
+    return firebase
+        .firestore()
+        .collection("users")
+        .doc(this.props.user.uid)
+        .get()
+        .then(doc => {
+          if (!doc.exists) {
+            //this.state.profileIsLoaded = false;
+            return null;
+          }
+          const { userData } = doc.data();
+          const newState = Object.assign(this.state, { userData, profileIsLoaded: true });
+          this.setState(newState);
+          console.log(newState);
+        })
+        .catch(err => {
+          console.error(err);
+          //this.state.profileIsLoaded = false;
+        })
+  }
+
   render() {
     let image1 = profileImage;
     let image2 = profileImage;
     let image3 = profileImage;
     let image4 = profileImage;
+    //if (!this.state.hasAttemptedLoad)
+    //  this.fetchProfile();
+    const userData = (this.state.profileIsLoaded ? this.state.userData : this.state.placeholderData);
     return (
       <div className={styles.profile_container}>
         <img src={profileImage} alt="profile" className={styles.profile_pic} />
         <p className={styles.name}>
-          Name <br />
-          Town, ST
+          {userData.first_name} {userData.last_initial} <br />
+          {userData.city}, {userData.state}
         </p>
-        <p className={styles.basic}>Age / G / O</p>
+        <p className={styles.basic}>{this.computeAge(userData.birthdate)} / {userData.gender} / {userData.looking_for}</p>
         <section className={styles.carousel} aria-label="Gallery">
           <ol className={styles.carousel_viewport}>
             <li
@@ -136,12 +195,7 @@ class Profile extends Component {
         <div className={styles.interests}>
           <h3 className={styles.interest_heading}>Interests</h3>
           <div className={styles.interest_scroll}>
-            <p>Interest 1</p>
-            <p>Interest 2</p>
-            <p>Interest 3</p>
-            <p>Interest 4</p>
-            <p>Interest 5</p>
-            <p>Interest 6</p>
+            <InterestList interests={userData.interests}></InterestList>
           </div>
         </div>
         <div className={styles.button_container}>
@@ -149,6 +203,15 @@ class Profile extends Component {
         </div>
       </div>
     );
+  }
+}
+
+class InterestList extends Component {
+  render() {
+    console.log(this.props.interests);
+    if (!this.props.interests.length)
+      return <li>(Interests)</li>
+    return this.props.interests.map(int => <li>{int}</li>);
   }
 }
 

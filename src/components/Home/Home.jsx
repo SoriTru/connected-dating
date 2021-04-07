@@ -43,7 +43,7 @@ class Home extends Component {
               <Chat user={this.props.user} />
             </Route>
             <Route exact path="/home/profile">
-              <Profile />
+              <Profile user={this.props.user} />
             </Route>
           </Switch>
         </div>
