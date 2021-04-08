@@ -25,12 +25,16 @@ class Profile extends Component {
         looking_for: '(Looking for)',
         color: '000000',
         state: '(State)',
-        city: '(City)',
+        city: '(City)'
       },
       profileIsLoaded: false,
       uploadSelection: null,
       showUploadBox: false,
-      imageURLs: []
+      imageURLs: [],
+      toast: {
+        text: '',
+        success: false
+      }
     };
   }
 
@@ -40,6 +44,14 @@ class Profile extends Component {
     const diff = Date.now() - birthDate;
     //console.log(day, month, year, dateString, birthDate, diff);
     return Math.floor(diff / yearMillis)
+  }
+
+  resetUploadArea = () => {
+    document.getElementById('profilePhotoUploader').value = null;
+    setTimeout(() => {
+      const newStatee = Object.assign(this.state, { toast: { text: '' } });
+      this.setState(newStatee);
+    }, 3000);
   }
 
   onFileChange = (event) => {
@@ -56,12 +68,48 @@ class Profile extends Component {
     console.log(file);
     if (!file) return;
     const locationRef = firebase.storage().ref().child(`/${this.props.user.uid}/${num}.png`);
-    return locationRef.put(file).then(console.log).catch(console.error);
+    return locationRef.put(file).then(async res => {
+      //console.log(res, res.metadata?.name);
+      const newState = Object.assign(this.state, { toast: { text: 'Successfully uploaded', success: true }, uploadSelection: '' });
+      //newState.imageURLs.push(await res.getDownloadURL());
+      this.setState(newState);
+      await this.refreshImages(newState);
+      this.resetUploadArea();
+    }).catch(err => {
+      console.error(err);
+      const newState = Object.assign(this.state, { toast: { text: 'Failed to upload: ' + err, success: false }, uploadSelection: '' });
+      this.setState(newState);
+      this.resetUploadArea();
+    });
   }
 
   toggleUploadBox = () => {
     const newState = Object.assign(this.state, { showUploadBox: !this.state.showUploadBox });
     this.setState(newState);
+  }
+
+  refreshImages = (newState) => {
+    newState.imageURLs = [];
+    return firebase.storage().ref().child('/' + this.props.user.uid).listAll()
+      .then(async res => {
+        console.log(res.items);
+
+        for (const item of res.items) {
+          const url = await item.getDownloadURL().catch(err => {
+            console.error(err);
+            return null;
+          });
+          if (url) {
+            newState.imageURLs.push(url);
+          }
+        }
+
+        console.log(newState);
+        this.setState(newState);
+      }).catch(err => {
+        console.error(err);
+        this.setState(newState);
+      })
   }
 
   componentDidMount() {
@@ -76,26 +124,7 @@ class Profile extends Component {
 
         const newState = Object.assign(this.state, { userData, profileIsLoaded: true });
 
-        return firebase.storage().ref().child('/' + this.props.user.uid).listAll()
-          .then(async res => {
-            console.log(res.items);
-
-            for (const item of res.items) {
-              const url = await item.getDownloadURL().catch(err => {
-                console.error(err);
-                return null;
-              });
-              if (url) {
-                newState.imageURLs.push(url);
-              }
-            }
-
-            console.log(newState);
-            this.setState(newState);
-          }).catch(err => {
-            console.error(err);
-            this.setState(newState);
-          })
+        return this.refreshImages(newState);
       })
       .catch(err => {
         console.error(err);
@@ -242,24 +271,36 @@ class Profile extends Component {
             <InterestList interests={userData.interests}></InterestList>
           </div>
         </div>
-        <button className={styles.button} disabled={this.state.imageURLs.length ? '' : null} onClick={this.toggleUploadBox}>{this.state.showUploadBox ? 'Hide Uploader' : 'Add Photos (max 4)'}</button>
+        <button className={styles.button} disabled={this.state.imageURLs.length >= 4 ? '' : null} onClick={this.toggleUploadBox}>{this.state.showUploadBox ? 'Hide Uploader' : 'Add Photos (max 4)'}</button>
         {this.state.showUploadBox ? <div className={styles.button_container}>
           <div className={styles.upload_container}>
             {this.state.uploadSelection ? <button className={styles.upload_button} onClick={this.uploadPhoto}>Upload {this.state.uploadSelection}</button> : <p>Select a photo to upload below:</p>}
             <input type="file" accept="image/png" id="profilePhotoUploader" onChange={this.onFileChange}></input>
           </div>
         </div> : ''}
-      </div>
+        <section className={styles.toastSection}>
+          <Toast text={this.state.toast?.text} success={this.state.toast?.success}></Toast>
+        </section>
+      </div>    
     );
   }
 }
 
 class InterestList extends Component {
   render() {
-    console.log(this.props.interests);
+    //console.log(this.props.interests);
     if (!this.props.interests.length)
       return <li key="placeholder">(Interests)</li>
     return this.props.interests.map(int => <li key={int}>{int}</li>);
+  }
+}
+
+class Toast extends Component {
+  render() {
+    if (!this.props.text) return '';
+    return <div className={styles.toast}>
+      <div className={this.props.success ? styles.toastTextSuccess : styles.toastTextFailure}>{this.props.text}</div>
+    </div>
   }
 }
 
