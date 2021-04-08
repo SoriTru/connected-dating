@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/firestore";
+import "firebase/storage";
 
 import styles from "./Profile.module.css";
 import profileImage from "../../images/nav_icons/cnd_nav_profile.png";
@@ -26,7 +27,10 @@ class Profile extends Component {
         state: '(State)',
         city: '(City)',
       },
-      profileIsLoaded: false
+      profileIsLoaded: false,
+      uploadSelection: null,
+      showUploadBox: false,
+      imageURLs: []
     };
   }
 
@@ -38,36 +42,76 @@ class Profile extends Component {
     return Math.floor(diff / yearMillis)
   }
 
+  onFileChange = (event) => {
+    const file = event.target.files[0];
+    console.log(event, file);
+    if (!file) return;
+    const newState = Object.assign(this.state, { uploadSelection: file.name });
+    this.setState(newState);
+  }
+
+  uploadPhoto = () => {
+    const num = this.state.imageURLs.length + 1;
+    const file = document.getElementById('profilePhotoUploader')?.files[0];
+    console.log(file);
+    if (!file) return;
+    const locationRef = firebase.storage().ref().child(`/${this.props.user.uid}/${num}.png`);
+    return locationRef.put(file).then(console.log).catch(console.error);
+  }
+
+  toggleUploadBox = () => {
+    const newState = Object.assign(this.state, { showUploadBox: !this.state.showUploadBox });
+    this.setState(newState);
+  }
+
   componentDidMount() {
-    return firebase
-        .firestore()
-        .collection("users")
-        .doc(this.props.user.uid)
-        .get()
-        .then(doc => {
-          if (!doc.exists) {
-            //this.state.profileIsLoaded = false;
-            return null;
-          }
-          const { userData } = doc.data();
-          const newState = Object.assign(this.state, { userData, profileIsLoaded: true });
-          this.setState(newState);
-          console.log(newState);
-        })
-        .catch(err => {
-          console.error(err);
+    return firebase.firestore().collection("users").doc(this.props.user.uid).get()
+      .then(doc => {
+        if (!doc.exists) {
           //this.state.profileIsLoaded = false;
-        })
+          return null;
+        }
+        const { userData } = doc.data();
+        if (!userData) return null;
+
+        const newState = Object.assign(this.state, { userData, profileIsLoaded: true });
+
+        return firebase.storage().ref().child('/' + this.props.user.uid).listAll()
+          .then(async res => {
+            console.log(res.items);
+
+            for (const item of res.items) {
+              const url = await item.getDownloadURL().catch(err => {
+                console.error(err);
+                return null;
+              });
+              if (url) {
+                newState.imageURLs.push(url);
+              }
+            }
+
+            console.log(newState);
+            this.setState(newState);
+          }).catch(err => {
+            console.error(err);
+            this.setState(newState);
+          })
+      })
+      .catch(err => {
+        console.error(err);
+        //this.state.profileIsLoaded = false;
+      })
   }
 
   render() {
-    let image1 = profileImage;
-    let image2 = profileImage;
-    let image3 = profileImage;
-    let image4 = profileImage;
-    //if (!this.state.hasAttemptedLoad)
-    //  this.fetchProfile();
     const userData = (this.state.profileIsLoaded ? this.state.userData : this.state.placeholderData);
+    const imageURLs = this.state.imageURLs || [];
+
+    const image1 = imageURLs[0] || profileImage;
+    const image2 = imageURLs[1] || profileImage;
+    const image3 = imageURLs[2] || profileImage;
+    const image4 = imageURLs[3] || profileImage;
+
     return (
       <div className={styles.profile_container}>
         <img src={profileImage} alt="profile" className={styles.profile_pic} />
@@ -198,9 +242,13 @@ class Profile extends Component {
             <InterestList interests={userData.interests}></InterestList>
           </div>
         </div>
-        <div className={styles.button_container}>
-          <button className={styles.button}>Add Photos (max 4)</button>
-        </div>
+        <button className={styles.button} disabled={this.state.imageURLs.length ? '' : null} onClick={this.toggleUploadBox}>{this.state.showUploadBox ? 'Hide Uploader' : 'Add Photos (max 4)'}</button>
+        {this.state.showUploadBox ? <div className={styles.button_container}>
+          <div className={styles.upload_container}>
+            {this.state.uploadSelection ? <button className={styles.upload_button} onClick={this.uploadPhoto}>Upload {this.state.uploadSelection}</button> : <p>Select a photo to upload below:</p>}
+            <input type="file" accept="image/png" id="profilePhotoUploader" onChange={this.onFileChange}></input>
+          </div>
+        </div> : ''}
       </div>
     );
   }
@@ -210,8 +258,8 @@ class InterestList extends Component {
   render() {
     console.log(this.props.interests);
     if (!this.props.interests.length)
-      return <li>(Interests)</li>
-    return this.props.interests.map(int => <li>{int}</li>);
+      return <li key="placeholder">(Interests)</li>
+    return this.props.interests.map(int => <li key={int}>{int}</li>);
   }
 }
 
