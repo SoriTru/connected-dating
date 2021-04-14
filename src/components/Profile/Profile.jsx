@@ -16,25 +16,25 @@ class Profile extends Component {
     this.state = {
       userData: {},
       placeholderData: {
-        first_name: '(Name)',
-        last_initial: '',
-        zipcode: '00000',
-        interests: ['(Interests)'],
-        birthdate: '00-00-0000',
-        gender: '(Gender)',
-        looking_for: '(Looking for)',
-        color: '000000',
-        state: '(State)',
-        city: '(City)'
+        first_name: "(Name)",
+        last_initial: "",
+        zipcode: "00000",
+        interests: ["(Interests)"],
+        birthdate: "00-00-0000",
+        gender: "(Gender)",
+        looking_for: "(Looking for)",
+        color: "000000",
+        state: "(State)",
+        city: "(City)",
       },
       profileIsLoaded: false,
       uploadSelection: null,
       showUploadBox: false,
       imageURLs: [],
       toast: {
-        text: '',
-        success: false
-      }
+        text: "",
+        success: false,
+      },
     };
   }
 
@@ -43,16 +43,16 @@ class Profile extends Component {
     const birthDate = Date.parse(dateString); //Date.parse(`${year}-${month}-${day}`);
     const diff = Date.now() - birthDate;
     //console.log(day, month, year, dateString, birthDate, diff);
-    return Math.floor(diff / yearMillis)
+    return Math.floor(diff / yearMillis);
   }
 
   resetUploadArea = () => {
-    document.getElementById('profilePhotoUploader').value = null;
+    document.getElementById("profilePhotoUploader").value = null;
     setTimeout(() => {
-      const newStatee = Object.assign(this.state, { toast: { text: '' } });
+      const newStatee = Object.assign(this.state, { toast: { text: "" } });
       this.setState(newStatee);
     }, 3000);
-  }
+  };
 
   onFileChange = (event) => {
     const file = event.target.files[0];
@@ -60,42 +60,60 @@ class Profile extends Component {
     if (!file) return;
     const newState = Object.assign(this.state, { uploadSelection: file.name });
     this.setState(newState);
-  }
+  };
 
   uploadPhoto = () => {
     const num = this.state.imageURLs.length + 1;
-    const file = document.getElementById('profilePhotoUploader')?.files[0];
+    const file = document.getElementById("profilePhotoUploader")?.files[0];
     console.log(file);
     if (!file) return;
-    const locationRef = firebase.storage().ref().child(`/${this.props.user.uid}/${num}.png`);
-    return locationRef.put(file).then(async res => {
-      //console.log(res, res.metadata?.name);
-      const newState = Object.assign(this.state, { toast: { text: 'Successfully uploaded', success: true }, uploadSelection: '' });
-      //newState.imageURLs.push(await res.getDownloadURL());
-      this.setState(newState);
-      await this.refreshImages(newState);
-      this.resetUploadArea();
-    }).catch(err => {
-      console.error(err);
-      const newState = Object.assign(this.state, { toast: { text: 'Failed to upload: ' + err, success: false }, uploadSelection: '' });
-      this.setState(newState);
-      this.resetUploadArea();
-    });
-  }
+    const locationRef = firebase
+      .storage()
+      .ref()
+      .child(`/${this.props.user.uid}/${num}.png`);
+    return locationRef
+      .put(file)
+      .then(async (res) => {
+        //console.log(res, res.metadata?.name);
+        const newState = Object.assign(this.state, {
+          toast: { text: "Successfully uploaded", success: true },
+          uploadSelection: "",
+        });
+        //newState.imageURLs.push(await res.getDownloadURL());
+        this.setState(newState);
+        await this.refreshImages(newState);
+        this.resetUploadArea();
+      })
+      .catch((err) => {
+        console.error(err);
+        const newState = Object.assign(this.state, {
+          toast: { text: "Failed to upload: " + err, success: false },
+          uploadSelection: "",
+        });
+        this.setState(newState);
+        this.resetUploadArea();
+      });
+  };
 
   toggleUploadBox = () => {
-    const newState = Object.assign(this.state, { showUploadBox: !this.state.showUploadBox });
+    const newState = Object.assign(this.state, {
+      showUploadBox: !this.state.showUploadBox,
+    });
     this.setState(newState);
-  }
+  };
 
   refreshImages = (newState) => {
     newState.imageURLs = [];
-    return firebase.storage().ref().child('/' + this.props.user.uid).listAll()
-      .then(async res => {
+    return firebase
+      .storage()
+      .ref()
+      .child("/" + this.props.user.uid)
+      .listAll()
+      .then(async (res) => {
         console.log(res.items);
 
         for (const item of res.items) {
-          const url = await item.getDownloadURL().catch(err => {
+          const url = await item.getDownloadURL().catch((err) => {
             console.error(err);
             return null;
           });
@@ -106,15 +124,20 @@ class Profile extends Component {
 
         console.log(newState);
         this.setState(newState);
-      }).catch(err => {
+      })
+      .catch((err) => {
         console.error(err);
         this.setState(newState);
-      })
-  }
+      });
+  };
 
   componentDidMount() {
-    return firebase.firestore().collection("users").doc(this.props.user.uid).get()
-      .then(doc => {
+    return firebase
+      .firestore()
+      .collection("users")
+      .doc(this.props.user.uid)
+      .get()
+      .then((doc) => {
         if (!doc.exists) {
           //this.state.profileIsLoaded = false;
           return null;
@@ -122,18 +145,23 @@ class Profile extends Component {
         const { userData } = doc.data();
         if (!userData) return null;
 
-        const newState = Object.assign(this.state, { userData, profileIsLoaded: true });
+        const newState = Object.assign(this.state, {
+          userData,
+          profileIsLoaded: true,
+        });
 
         return this.refreshImages(newState);
       })
-      .catch(err => {
+      .catch((err) => {
         console.error(err);
         //this.state.profileIsLoaded = false;
-      })
+      });
   }
 
   render() {
-    const userData = (this.state.profileIsLoaded ? this.state.userData : this.state.placeholderData);
+    const userData = this.state.profileIsLoaded
+      ? this.state.userData
+      : this.state.placeholderData;
     const imageURLs = this.state.imageURLs || [];
 
     const image1 = imageURLs[0] || profileImage;
@@ -148,7 +176,10 @@ class Profile extends Component {
           {userData.first_name} {userData.last_initial} <br />
           {userData.city}, {userData.state}
         </p>
-        <p className={styles.basic}>{this.computeAge(userData.birthdate)} / {userData.gender} / {userData.looking_for}</p>
+        <p className={styles.basic}>
+          {this.computeAge(userData.birthdate)} / {userData.gender} /{" "}
+          {userData.looking_for}
+        </p>
         <section className={styles.carousel} aria-label="Gallery">
           <ol className={styles.carousel_viewport}>
             <li
@@ -271,17 +302,44 @@ class Profile extends Component {
             <InterestList interests={userData.interests}></InterestList>
           </div>
         </div>
-        <button className={styles.button} disabled={this.state.imageURLs.length >= 4 ? '' : null} onClick={this.toggleUploadBox}>{this.state.showUploadBox ? 'Hide Uploader' : 'Add Photos (max 4)'}</button>
-        {this.state.showUploadBox ? <div className={styles.button_container}>
-          <div className={styles.upload_container}>
-            {this.state.uploadSelection ? <button className={styles.upload_button} onClick={this.uploadPhoto}>Upload {this.state.uploadSelection}</button> : <p>Select a photo to upload below:</p>}
-            <input type="file" accept="image/png" id="profilePhotoUploader" onChange={this.onFileChange}></input>
+        <button
+          className={styles.button}
+          disabled={this.state.imageURLs.length >= 4 ? "" : null}
+          onClick={this.toggleUploadBox}
+        >
+          {this.state.showUploadBox ? "Hide Uploader" : "Add Photos (max 4)"}
+        </button>
+        {this.state.showUploadBox ? (
+          <div className={styles.button_container}>
+            <div className={styles.upload_container}>
+              {this.state.uploadSelection ? (
+                <button
+                  className={styles.upload_button}
+                  onClick={this.uploadPhoto}
+                >
+                  Upload {this.state.uploadSelection}
+                </button>
+              ) : (
+                <p>Select a photo to upload below:</p>
+              )}
+              <input
+                type="file"
+                accept="image/png"
+                id="profilePhotoUploader"
+                onChange={this.onFileChange}
+              ></input>
+            </div>
           </div>
-        </div> : ''}
+        ) : (
+          ""
+        )}
         <section className={styles.toastSection}>
-          <Toast text={this.state.toast?.text} success={this.state.toast?.success}></Toast>
+          <Toast
+            text={this.state.toast?.text}
+            success={this.state.toast?.success}
+          ></Toast>
         </section>
-      </div>    
+      </div>
     );
   }
 }
@@ -290,17 +348,27 @@ class InterestList extends Component {
   render() {
     //console.log(this.props.interests);
     if (!this.props.interests.length)
-      return <li key="placeholder">(Interests)</li>
-    return this.props.interests.map(int => <li key={int}>{int}</li>);
+      return <li key="placeholder">(Interests)</li>;
+    return this.props.interests.map((int) => <li key={int}>{int}</li>);
   }
 }
 
 class Toast extends Component {
   render() {
-    if (!this.props.text) return '';
-    return <div className={styles.toast}>
-      <div className={this.props.success ? styles.toastTextSuccess : styles.toastTextFailure}>{this.props.text}</div>
-    </div>
+    if (!this.props.text) return "";
+    return (
+      <div className={styles.toast}>
+        <div
+          className={
+            this.props.success
+              ? styles.toastTextSuccess
+              : styles.toastTextFailure
+          }
+        >
+          {this.props.text}
+        </div>
+      </div>
+    );
   }
 }
 
