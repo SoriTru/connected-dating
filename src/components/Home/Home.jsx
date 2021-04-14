@@ -8,6 +8,7 @@ import TopNav from "../TopNav/TopNav";
 import Profile from "../Profile/Profile";
 import Chat from "../Chat/Chat";
 import Roulette from "../Roulette/Roulette";
+import Dates from "../Dates/Dates";
 
 class Home extends Component {
   constructor(props) {
@@ -34,7 +35,7 @@ class Home extends Component {
               Home
             </Route>
             <Route exact path="/home/dates">
-              Dates
+              <Dates user={this.props.user} />
             </Route>
             <Route exact path="/home/video">
               <Roulette user={this.props.user} />
