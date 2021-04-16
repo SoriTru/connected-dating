@@ -5,7 +5,6 @@ import "firebase/firestore";
 import styles from "./Chat.module.css";
 import ChatInfo from "../ChatInfo/ChatInfo";
 import profileImage from "../../images/nav_icons/cnd_nav_profile.png";
-import { Link } from "react-router-dom";
 
 class Chat extends Component {
   constructor(props) {
@@ -20,12 +19,13 @@ class Chat extends Component {
       chat: "",
       formValue: "",
       messageData: [],
+      otherUser: null,
     };
   }
 
   componentDidMount() {
     // get chat ids from user's data
-    firebase
+    this.unsubFromChatListener = firebase
       .firestore()
       .collection("users")
       .doc(this.props.user.uid)
@@ -36,6 +36,10 @@ class Chat extends Component {
           this.populateOverviewWithChats(data.chats);
         }
       });
+  }
+
+  componentWillUnmount() {
+    this.unsubFromChatListener();
   }
 
   handleChange = (event) => {
@@ -84,7 +88,11 @@ class Chat extends Component {
                 key={chat.id}
                 onClick={() => {
                   this.getMessageData(chat.id);
-                  this.setState({ isOverview: false });
+                  let otherUser =
+                    chat.user1.uid !== this.props.user.uid
+                      ? chat.user1.uid
+                      : chat.user2.uid;
+                  this.setState({ isOverview: false, otherUser: otherUser });
                 }}
               >
                 <ChatInfo
@@ -183,6 +191,26 @@ class Chat extends Component {
     }
   };
 
+  matchWithUser = async () => {
+    if (!this.state.otherUser) {
+      return;
+    }
+
+    await firebase
+      .firestore()
+      .collection("users")
+      .doc(this.state.otherUser)
+      .update({
+        finalMatch: firebase.firestore.FieldValue.arrayUnion(
+          this.props.user.uid
+        ),
+      });
+
+    alert(
+      "Match request sent! Once the other party confirms, the QR functionality will work for your final match."
+    );
+  };
+
   render() {
     if (this.state.isOverview) {
       return (
@@ -196,12 +224,12 @@ class Chat extends Component {
         <div className={styles.button_area}>
           <button
             onClick={() => {
-              this.setState({ isOverview: true });
+              this.setState({ isOverview: true, otherUser: null });
             }}
           >
             Go Back
           </button>
-          <Link to={"/home/dates"}>Match</Link>
+          <button onClick={this.matchWithUser}>Match!</button>
         </div>
         <div className={styles.overflow_container}>
           {this.state.messageData && this.renderMessages()}
