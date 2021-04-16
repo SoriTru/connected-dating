@@ -213,15 +213,39 @@ class Roulette extends Component {
   matchWithUser = async () => {
     console.log("matching", this.state.matchedUser);
     if (!this.state.matchedUser) {
-      console.log("Can't match with null user!");
+      console.warn("Can't match with null user!");
       return;
     }
 
-    await initiateChat(
-      this.props.user.uid,
-      this.state.matchedUser,
-      this.firestore
-    );
+    const userRef = firebase.firestore().collection("users");
+
+    let userData = await userRef.doc(this.props.user.uid).get();
+
+    if (!userData.exists) {
+      return;
+    }
+
+    // if other user has matched, start chat
+    if (
+      userData.data().pendingMatches &&
+      userData.data().pendingMatches.includes(this.state.matchedUser)
+    ) {
+      // initiate chat
+      await initiateChat(
+        this.props.user.uid,
+        this.state.matchedUser,
+        this.firestore
+      );
+      alert("Chat initiated!");
+    } else {
+      // add pending match to other users list of matches
+      await userRef.doc(this.state.matchedUser).update({
+        pendingMatches: firebase.firestore.FieldValue.arrayUnion(
+          this.props.user.uid
+        ),
+      });
+      alert("Match request received!");
+    }
   };
 
   onConnectionMade = (otherUid) => {

@@ -61,8 +61,8 @@ export const initiateChat = async (uid, otherUser, firestore) => {
       },
     };
 
-    // create new chat entry
-    let chatId = await firestore.collection("chats").doc().id;
+    // create new chat entry, using concatenation of userids for id
+    let chatId = uid < otherUser ? uid + otherUser : otherUser + uid;
     await firestore.collection("chats").doc(chatId).set(chatData);
 
     // update chat id for both users
