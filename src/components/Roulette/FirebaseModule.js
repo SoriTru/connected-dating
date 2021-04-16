@@ -2,6 +2,9 @@ import firebase from "firebase/app";
 const fieldValue = firebase.firestore.FieldValue;
 
 export const addUserToQueue = async (uid, firestore) => {
+  // remove user from listening to notifs
+  await firestore.collection("notifs").doc(uid).delete();
+
   // get user data
   let userData = await firestore.collection("users").doc(uid).get();
 
