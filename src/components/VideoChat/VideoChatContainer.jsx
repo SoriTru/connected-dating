@@ -30,6 +30,7 @@ class VideoChatContainer extends Component {
 
     this.state = {
       localConnection: null,
+      isCallStarted: false,
     };
 
     this.remoteVideoRef = React.createRef();
@@ -75,7 +76,10 @@ class VideoChatContainer extends Component {
   shouldComponentUpdate(nextProps, nextState) {
     // TODO: simplify state and props to allow for elimination of this entire function
     // only time to re-render is if we add or drop a remote connection
-    return this.props.otherUser !== nextProps.otherUser;
+    return (
+      this.props.otherUser !== nextProps.otherUser ||
+      this.state.isCallStarted !== nextState.isCallStarted
+    );
   }
 
   initiateCall = async () => {
@@ -143,6 +147,8 @@ class VideoChatContainer extends Component {
         case "candidate":
           // add candidate to our connection
           addCandidate(this.state.localConnection, notif);
+          // candidate received, so connection is being attempted
+          this.setState({ isCallStarted: true });
           break;
         case "terminate":
           this.props.endVideoCall();
@@ -163,6 +169,7 @@ class VideoChatContainer extends Component {
         connectedUser={this.props.otherUser}
         user={this.props.user}
         endCall={this.props.endVideoCall}
+        isCallStarted={this.state.isCallStarted}
       />
     );
   }
