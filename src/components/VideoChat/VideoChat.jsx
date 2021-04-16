@@ -53,6 +53,11 @@ export default class VideoChat extends Component {
             className={styles.video}
           />
         </div>
+        <div>
+          <button onClick={async () => await this.props.matchWithUser()}>
+            Match!
+          </button>{" "}
+        </div>
       </div>
     );
   }

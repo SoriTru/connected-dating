@@ -25,11 +25,10 @@ class Chat extends Component {
   componentDidMount() {
     // get chat ids from user's data.
     // This onSnapshot updates every time the user data updates in firebase
-    // TODO: replace 'defaultID' with this.props.user.uid when done testing
     firebase
       .firestore()
       .collection("users")
-      .doc("defaultID")
+      .doc(this.props.user.uid)
       .onSnapshot((doc) => {
         let data = doc.data();
         if (data && data.chats) {

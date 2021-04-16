@@ -170,6 +170,7 @@ class VideoChatContainer extends Component {
         user={this.props.user}
         endCall={this.props.endVideoCall}
         isCallStarted={this.state.isCallStarted}
+        matchWithUser={this.props.matchWithUser}
       />
     );
   }

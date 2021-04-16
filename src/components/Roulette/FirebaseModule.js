@@ -17,9 +17,6 @@ export const addUserToQueue = async (uid, firestore) => {
       .collection("match")
       .doc("north_america")
       .update(queueUpdate);
-
-    // NOTE: I'm not sure how firebase will handle multiple updates at the same time,
-    // so this could result in errors
   } else {
     console.warn("Unable to add user to queue!");
     alert("Must set up profile first! Please navigate to /signup");
@@ -41,4 +38,36 @@ export const removeUserFromQueue = async (uid, firestore) => {
   queueUpdate[`user_data.${uid}`] = fieldValue.delete();
 
   await firestore.collection("match").doc("north_america").update(queueUpdate);
+};
+
+export const initiateChat = async (uid, otherUser, firestore) => {
+  // get data for both users
+  let user1 = await firestore.collection("users").doc(uid).get();
+  let user2 = await firestore.collection("users").doc(otherUser).get();
+
+  if (user1.exists && user2.exists) {
+    // set chat data
+    let chatData = {
+      lastMessage: "Chat initiated",
+      user1: {
+        color: user1.data().userData.color,
+        name: user1.data().userData.first_name,
+        uid: uid,
+      },
+      user2: {
+        color: user2.data().userData.color,
+        name: user2.data().userData.first_name,
+        uid: otherUser,
+      },
+    };
+
+    // create new chat entry
+    let chatId = await firestore.collection("chats").doc().id;
+    await firestore.collection("chats").doc(chatId).set(chatData);
+
+    // update chat id for both users
+    let chatUpdate = { chats: fieldValue.arrayUnion(chatId) };
+    await firestore.collection("users").doc(uid).update(chatUpdate);
+    await firestore.collection("users").doc(otherUser).update(chatUpdate);
+  }
 };

@@ -4,6 +4,7 @@ import "firebase/firestore";
 
 import {
   addUserToQueue,
+  initiateChat,
   listenToQueue,
   removeUserFromQueue,
 } from "./FirebaseModule";
@@ -209,6 +210,20 @@ class Roulette extends Component {
     await addUserToQueue(this.props.user.uid, this.firestore);
   };
 
+  matchWithUser = async () => {
+    console.log("matching", this.state.matchedUser);
+    if (!this.state.matchedUser) {
+      console.log("Can't match with null user!");
+      return;
+    }
+
+    await initiateChat(
+      this.props.user.uid,
+      this.state.matchedUser,
+      this.firestore
+    );
+  };
+
   onConnectionMade = (otherUid) => {
     console.log(`VideoChatContainer made connection to ${otherUid}`);
     this.setState({ matchedUser: otherUid });
@@ -222,6 +237,7 @@ class Roulette extends Component {
           otherUser={this.state.matchedUser}
           endVideoCall={this.endVideoCall}
           connectCallback={this.onConnectionMade}
+          matchWithUser={this.matchWithUser}
         />
       );
     }
