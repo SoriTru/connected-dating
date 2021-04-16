@@ -5,6 +5,7 @@ import "firebase/firestore";
 import styles from "./Chat.module.css";
 import ChatInfo from "../ChatInfo/ChatInfo";
 import profileImage from "../../images/nav_icons/cnd_nav_profile.png";
+import { Link } from "react-router-dom";
 
 class Chat extends Component {
   constructor(props) {
@@ -23,14 +24,14 @@ class Chat extends Component {
   }
 
   componentDidMount() {
-    // get chat ids from user's data.
-    // This onSnapshot updates every time the user data updates in firebase
+    // get chat ids from user's data
     firebase
       .firestore()
       .collection("users")
       .doc(this.props.user.uid)
       .onSnapshot((doc) => {
         let data = doc.data();
+        this.color = data.userData.color;
         if (data && data.chats) {
           this.populateOverviewWithChats(data.chats);
         }
@@ -99,7 +100,7 @@ class Chat extends Component {
   };
 
   getMessageData = (chatId) => {
-    // set state so sendMessage funtion works
+    // set state so sendMessage function works
     this.setState({ currentChatId: chatId });
 
     // get message data from firebase
@@ -167,9 +168,15 @@ class Chat extends Component {
         text: this.state.formValue,
         createdAt: firebase.firestore.FieldValue.serverTimestamp(),
         uid: this.props.user.uid,
-        color: "red",
-        // TODO: change color to firebase photoURL, and set that accordingly
+        color: this.color,
       });
+
+      // set last message
+      await firebase
+        .firestore()
+        .collection("chats")
+        .doc(this.state.currentChatId)
+        .update({ lastMessage: this.state.formValue });
 
       this.dummy.current.scrollIntoView({ behavior: "smooth" });
       this.setState({ formValue: "" });
@@ -194,13 +201,7 @@ class Chat extends Component {
           >
             Go Back
           </button>
-          <button
-            onClick={() => {
-              alert("Matched! Well, not really (yet)");
-            }}
-          >
-            Match
-          </button>
+          <Link to={"/home/dates"}>Match</Link>
         </div>
         <div className={styles.overflow_container}>
           {this.state.messageData && this.renderMessages()}

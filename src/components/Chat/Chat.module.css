@@ -17,6 +17,7 @@
 
 .button_area {
   grid-area: buttons;
+  text-align: center;
 }
 
 .overflow_container {
