@@ -62,30 +62,18 @@ class Dates extends Component {
         statusText: "You have already confirmed a date with that user!",
       });
     }
-    const chat1 = await firebase
+    const finalMatches = await firebase
       .firestore()
-      .collection("chats")
-      .where("user1.uid", "==", uid)
-      .where("user2.uid", "==", this.props.user.uid)
+      .collection("users")
+      .doc(this.props.user.uid)
       .get()
-      .then((snapshot) => snapshot?.docs?.[0]?.data())
+      .then(doc => doc.data()?.finalMatch)
       .catch((err) => {
         console.error(err);
         return null;
       });
-    const chat2 = await firebase
-      .firestore()
-      .collection("chats")
-      .where("user2.uid", "==", uid)
-      .where("user1.uid", "==", this.props.user.uid)
-      .get()
-      .then((snapshot) => snapshot?.docs?.[0]?.data())
-      .catch((err) => {
-        console.error(err);
-        return null;
-      });
-    const chat = chat1 || chat2;
-    if (!chat) {
+    const isMatched = finalMatches?.includes(uid)
+    if (!isMatched) {
       setTimeout(() => {
         this.setState({
           isScanning: true,
