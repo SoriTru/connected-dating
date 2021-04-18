@@ -46,9 +46,9 @@ export const initiateConnection = async () => {
         { url: "stun:stun3.l.google.com:19302" },
         { url: "stun:stun4.l.google.com:19302" },
         {
-          url: "turn:192.158.29.39:3478?transport=udp",
-          credential: "JZEOEt2V3Qb0y27GRntt2u2PAYA=",
-          username: "28224511:1379330808",
+          url: "turn:numb.viagenie.ca",
+          credential: process.env.REACT_APP_TURN_SERVER_PW,
+          username: process.env.REACT_APP_TURN_SERVER_USERNAME,
         },
       ],
     };
