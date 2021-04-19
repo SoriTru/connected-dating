@@ -67,12 +67,12 @@ class Dates extends Component {
       .collection("users")
       .doc(this.props.user.uid)
       .get()
-      .then(doc => doc.data()?.finalMatch)
+      .then((doc) => doc.data()?.finalMatch)
       .catch((err) => {
         console.error(err);
         return null;
       });
-    const isMatched = finalMatches?.includes(uid)
+    const isMatched = finalMatches?.includes(uid);
     if (!isMatched) {
       setTimeout(() => {
         this.setState({

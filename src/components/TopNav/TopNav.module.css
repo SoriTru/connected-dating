@@ -1,17 +1,11 @@
-.logo {
-  height: 3em;
-  width: 3em;
+.nav_button {
+  height: 2.5em;
+  width: 2.5em;
   margin: 1em 2em;
 }
 
 .title {
   font-size: 2em;
-}
-
-.logout {
-  height: 3em;
-  width: 3em;
-  margin: 1em 2em;
 }
 
 .container {

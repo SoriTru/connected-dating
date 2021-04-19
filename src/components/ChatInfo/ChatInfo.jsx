@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 
 import styles from "./ChatInfo.module.css";
-import profileIcon from "../../images/nav_icons/cnd_nav_profile.png";
+import profileIcon from "../../images/nav_icons/image_temp.png";
 
 class ChatInfo extends Component {
   render() {

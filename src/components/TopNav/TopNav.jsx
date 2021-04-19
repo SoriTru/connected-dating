@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 
 import styles from "./TopNav.module.css";
-import logo from "../../images/cnd_plain_logo.png";
+import settings from "../../images/nav_icons/settings.png";
+import logout from "../../images/nav_icons/logout.png";
 import { Link, withRouter } from "react-router-dom";
 import firebase from "firebase/app";
 import "firebase/auth";
@@ -25,13 +26,16 @@ class TopNav extends Component {
 
     return (
       <div className={styles.container}>
-        <Link to="/home">
-          <img src={logo} alt="logo" className={styles.logo} />
+        <Link to="/signup">
+          <img src={settings} alt="settings" className={styles.nav_button} />
         </Link>
         <div className={styles.title}>{title}</div>
-        <button onClick={this.logOut} className={styles.logout}>
-          Log out
-        </button>
+        <img
+          src={logout}
+          alt="logout"
+          className={styles.nav_button}
+          onClick={this.logOut}
+        />
       </div>
     );
   }

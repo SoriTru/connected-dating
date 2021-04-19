@@ -5,7 +5,8 @@ import "firebase/firestore";
 import "firebase/storage";
 
 import styles from "./Profile.module.css";
-import profileImage from "../../images/nav_icons/cnd_nav_profile.png";
+import profileImage from "../../images/profile_2.png";
+import fillerImage from "../../images/nav_icons/image_temp.png";
 
 const yearMillis = 365.25 * 24 * 60 * 60 * 1000;
 
@@ -164,10 +165,10 @@ class Profile extends Component {
       : this.state.placeholderData;
     const imageURLs = this.state.imageURLs || [];
 
-    const image1 = imageURLs[0] || profileImage;
-    const image2 = imageURLs[1] || profileImage;
-    const image3 = imageURLs[2] || profileImage;
-    const image4 = imageURLs[3] || profileImage;
+    const image1 = imageURLs[0] || fillerImage;
+    const image2 = imageURLs[1] || fillerImage;
+    const image3 = imageURLs[2] || fillerImage;
+    const image4 = imageURLs[3] || fillerImage;
 
     return (
       <div className={styles.profile_container}>

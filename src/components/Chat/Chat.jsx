@@ -4,7 +4,7 @@ import "firebase/firestore";
 
 import styles from "./Chat.module.css";
 import ChatInfo from "../ChatInfo/ChatInfo";
-import profileImage from "../../images/nav_icons/cnd_nav_profile.png";
+import profileImage from "../../images/nav_icons/image_temp.png";
 
 class Chat extends Component {
   constructor(props) {
