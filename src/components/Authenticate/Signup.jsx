@@ -15,8 +15,45 @@ class Signup extends Component {
       input: {},
       errors: {},
       profileIsSaved: false,
+      isUpdating: false,
     };
   }
+
+  componentDidMount = async () => {
+    if (!this.props.user) {
+      return;
+    }
+
+    let userData = await firebase
+      .firestore()
+      .collection("users")
+      .doc(this.props.user.uid)
+      .get();
+
+    if (userData.exists) {
+      let input = this.state.input;
+      let formElements = [
+        "first_name",
+        "last_initial",
+        "zipcode",
+        "interests",
+        "color",
+        "birthdate",
+        "gender",
+        "looking_for",
+      ];
+
+      for (const element of formElements) {
+        input[element] = userData.data().userData[element]
+          ? userData.data().userData[element]
+          : "";
+      }
+
+      this.setState({ input, isUpdating: true });
+    } else {
+      console.log("Doesn't exist");
+    }
+  };
 
   handleChange = (event) => {
     let input = this.state.input;
@@ -158,6 +195,14 @@ class Signup extends Component {
       errors["zipcode"] = "Enter a 5 digit zipcode";
     }
 
+    // check that user is at least 18
+    let currentDate = new Date();
+    let is18 =
+      currentDate.getFullYear() - parseInt(input["birthdate"].slice(0, 5)) < 18;
+    if (input["birthdate"] && is18) {
+      isValid = false;
+      errors["birthdate"] = "Must be at least 18 years of age!";
+    }
     this.setState({ errors: errors });
     return isValid;
   };
@@ -171,7 +216,11 @@ class Signup extends Component {
         <div className={styles.login_container}>
           <div className={styles.main}>
             <div className={styles.profile_options}>
-              <h2 className={styles.option_title}>Set Up Your Account</h2>
+              <h2 className={styles.option_title}>
+                {this.state.isUpdating
+                  ? "Update Your Info"
+                  : "Set Up Your Account"}
+              </h2>
               <div className={styles.setup_items}>
                 <label htmlFor="first_name" className={styles.setup_label}>
                   First Name:
@@ -181,10 +230,11 @@ class Signup extends Component {
                   name="first_name"
                   onChange={this.handleChange}
                   className={styles.setup_input}
+                  value={this.state.input.first_name || ""}
                 />
-                <div className={styles.text_danger}>
-                  {this.state.errors.first_name}
-                </div>
+              </div>
+              <div className={styles.text_danger}>
+                {this.state.errors.first_name}
               </div>
 
               <div className={styles.setup_items}>
@@ -197,10 +247,11 @@ class Signup extends Component {
                   onChange={this.handleChange}
                   maxLength="1"
                   className={styles.setup_input}
+                  value={this.state.input.last_initial || ""}
                 />
-                <div className={styles.text_danger}>
-                  {this.state.errors.last_initial}
-                </div>
+              </div>
+              <div className={styles.text_danger}>
+                {this.state.errors.last_initial}
               </div>
 
               <div className={styles.setup_items}>
@@ -214,10 +265,11 @@ class Signup extends Component {
                   pattern="[0-9]{5}"
                   placeholder="Five digit zip code"
                   className={styles.setup_input}
+                  value={this.state.input.zipcode || ""}
                 />
-                <div className={styles.text_danger}>
-                  {this.state.errors.zipcode}
-                </div>
+              </div>
+              <div className={styles.text_danger}>
+                {this.state.errors.zipcode}
               </div>
 
               <div>
@@ -231,6 +283,7 @@ class Signup extends Component {
                   onChange={this.handleChange}
                   placeholder="kites, SpongeBob, surfing, rocks"
                   className={styles.setup_text_area}
+                  value={this.state.input.interests || ""}
                 />
               </div>
 
@@ -243,6 +296,7 @@ class Signup extends Component {
                   name="color"
                   onChange={this.handleChange}
                   className={styles.setup_color}
+                  value={this.state.input.color || ""}
                 />
               </div>
 
@@ -256,10 +310,11 @@ class Signup extends Component {
                   onChange={this.handleChange}
                   className={styles.setup_input}
                   style={{ width: "60%" }}
+                  value={this.state.input.birthdate || ""}
                 />
-                <div className={styles.text_danger}>
-                  {this.state.errors.birthdate}
-                </div>
+              </div>
+              <div className={styles.text_danger}>
+                {this.state.errors.birthdate}
               </div>
 
               <div className={styles.setup_items}>
@@ -271,11 +326,13 @@ class Signup extends Component {
                   onChange={this.handleChange}
                   name="gender"
                   className={styles.setup_input}
+                  value={this.state.input.gender || ""}
                 />
-                <div className={styles.text_danger}>
-                  {this.state.errors.gender}
-                </div>
               </div>
+              <div className={styles.text_danger}>
+                {this.state.errors.gender}
+              </div>
+
               <div className={styles.setup_items}>
                 <label htmlFor="looking_for" className={styles.setup_label}>
                   looking for
@@ -285,10 +342,11 @@ class Signup extends Component {
                   onChange={this.handleChange}
                   name="looking_for"
                   className={styles.setup_input}
+                  value={this.state.input.looking_for || ""}
                 />
-                <div className={styles.text_danger}>
-                  {this.state.errors.looking_for}
-                </div>
+              </div>
+              <div className={styles.text_danger}>
+                {this.state.errors.looking_for}
               </div>
 
               <div className={styles.centered_content}>
@@ -297,7 +355,7 @@ class Signup extends Component {
                   onClick={this.handleProfileSubmit}
                   className={styles.form_submit}
                 >
-                  Submit
+                  {this.state.isUpdating ? "Update" : "Submit"}
                 </button>
               </div>
             </div>
