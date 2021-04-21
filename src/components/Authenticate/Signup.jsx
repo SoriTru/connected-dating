@@ -4,7 +4,8 @@ import firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/firestore";
 
-import styles from "./Signup.module.css";
+import styles from "./Authenticate.module.css";
+import cupid from "../../images/art/confetti_cupid.png";
 
 class Signup extends Component {
   constructor(props) {
@@ -167,7 +168,7 @@ class Signup extends Component {
     }
     if (this.props.user) {
       return (
-        <div className={styles.container}>
+        <div className={styles.signup_container}>
           <div className={styles.main}>
             <div className={styles.profile_options}>
               <h3 className={styles.option_title}>Set up your account</h3>
@@ -270,8 +271,12 @@ class Signup extends Component {
     }
 
     return (
-      <div className={styles.container}>
+      <div className={styles.signup_container}>
+        <div className={styles.img_container}>
+          <img alt={"cupid"} src={cupid} className={styles.graphic} />
+        </div>
         <div className={styles.main}>
+          <h1 style={{ color: "#fffffa", margin: 0 }}>Sign Up</h1>
           <form onSubmit={this.handleSignup} noValidate>
             <div className={styles.form_group}>
               <label htmlFor="email">Email:</label>
@@ -281,7 +286,6 @@ class Signup extends Component {
                 name="email"
                 onChange={this.handleChange}
                 className={styles.form_input}
-                placeholder="Enter your email"
                 id="email"
               />
               <div className={styles.text_danger}>
@@ -296,7 +300,7 @@ class Signup extends Component {
                 name="password"
                 onChange={this.handleChange}
                 className={styles.form_input}
-                placeholder="*********"
+                placeholder={"Must be at least 7 characters"}
                 id="password"
               />
               <div className={styles.text_danger}>
@@ -311,7 +315,6 @@ class Signup extends Component {
                 name="confirm_password"
                 onChange={this.handleChange}
                 className={styles.form_input}
-                placeholder="*********"
                 id="confirm_password"
               />
               <div className={styles.text_danger}>

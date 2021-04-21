@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import styles from "./Start.module.css";
 
 import logo from "../../images/cnd_plain_logo.png";
-import cupid from "../../images/cupid.png";
+import cupid from "../../images/art/cupid.png";
 
 class Start extends Component {
   chooseLink = (isTeam) => {

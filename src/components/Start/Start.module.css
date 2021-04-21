@@ -34,6 +34,7 @@
 }
 
 .cupid {
+  margin-bottom: 3em;
   width: 50%;
   max-width: 300px;
 }
@@ -48,8 +49,6 @@
   color: #0a2342;
   text-decoration: none;
   border-radius: 25px;
-  /* set the button to be in front of the box shadow */
-  z-index: 1;
 }
 
 .footer {

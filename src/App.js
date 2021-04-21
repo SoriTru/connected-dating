@@ -9,8 +9,8 @@ import {
 import styles from "./App.module.css";
 
 import Start from "./components/Start/Start";
-import Login from "./components/Login/Login";
-import Signup from "./components/Signup/Signup";
+import Login from "./components/Authenticate/Login";
+import Signup from "./components/Authenticate/Signup";
 import Home from "./components/Home/Home";
 import firebase from "firebase/app";
 import "firebase/auth";

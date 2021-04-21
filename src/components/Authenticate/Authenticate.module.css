@@ -12,11 +12,20 @@ label {
   text-align: center;
 }
 
-.container {
-  background-image: linear-gradient(#c3c4db, #9c9ece);
+.login_container {
+  background-color: #c3c4db;
+  /*background-color: #a3a5dc;*/
   min-height: 100%;
   display: grid;
   grid-template-rows: 1fr auto;
+}
+
+.signup_container {
+  background-color: #c3c4db;
+  /*background-color: #a3a5dc;*/
+  min-height: 100%;
+  display: grid;
+  grid-template-rows: auto 1fr;
 }
 
 .form_group {
@@ -27,15 +36,28 @@ label {
 .form_input {
   width: 100%;
   line-height: 1.4;
+  padding: 0.5em;
+  margin: 0.25em 0;
+  border: 0;
+  border-bottom: 1px solid #0a2342;
+  background: transparent;
+}
+
+::placeholder {
+  color: #0a2342;
+  opacity: 0.6;
 }
 
 .form_submit {
-  width: 50%;
+  width: min(80%, 300px);
+  font-weight: bold;
+  font-size: medium;
   padding: 5px;
-  margin: 15px 0;
+  margin: 5px 0 30px;
   color: #0a2342;
   border-radius: 25px;
-  border: 1px solid #0a2342;
+  border: none;
+  background: #fffffa;
 }
 
 .main {
@@ -59,4 +81,16 @@ label {
 
 .option_title {
   text-align: center;
+}
+
+.graphic {
+  width: 50%;
+  max-width: 300px;
+  margin-top: 2em;
+}
+
+.img_container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

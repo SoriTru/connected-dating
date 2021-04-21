@@ -2,7 +2,8 @@ import React, { Component } from "react";
 import firebase from "firebase/app";
 import "firebase/auth";
 
-import styles from "./Login.module.css";
+import styles from "./Authenticate.module.css";
+import flower from "../../images/art/white_flower.png";
 
 class Login extends Component {
   constructor(props) {
@@ -68,8 +69,9 @@ class Login extends Component {
 
   render() {
     return (
-      <div className={styles.container}>
+      <div className={styles.login_container}>
         <div className={styles.main}>
+          <h1 style={{ color: "#fffffa" }}>Log In</h1>
           <form onSubmit={this.handleSubmit} noValidate>
             <div className={styles.form_group}>
               <label htmlFor="email">Email:</label>
@@ -111,6 +113,9 @@ class Login extends Component {
               />
             </div>
           </form>
+        </div>
+        <div className={styles.img_container}>
+          <img alt={"flower"} src={flower} className={styles.graphic} />
         </div>
       </div>
     );
