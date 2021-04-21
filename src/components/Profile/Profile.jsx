@@ -29,7 +29,6 @@ class Profile extends Component {
       },
       profileIsLoaded: false,
       uploadSelection: null,
-      showUploadBox: false,
       displayModal: false,
       imageURLs: [],
       toast: {
@@ -56,7 +55,6 @@ class Profile extends Component {
 
   onFileChange = (event) => {
     const file = event.target.files[0];
-    console.log(event, file);
     if (!file) return;
     const newState = Object.assign(this.state, { uploadSelection: file.name });
     this.setState(newState);
@@ -65,8 +63,10 @@ class Profile extends Component {
   uploadPhoto = () => {
     const num = this.state.imageURLs.length + 1;
     const file = document.getElementById("profilePhotoUploader")?.files[0];
-    console.log(file);
-    if (!file) return;
+    if (!file) {
+      return;
+    }
+
     const locationRef = firebase
       .storage()
       .ref()
@@ -302,12 +302,16 @@ class Profile extends Component {
         <div className={styles.button_container}>
           <button
             className={styles.button}
-            disabled={this.state.imageURLs.length >= 4 ? "" : null}
+            disabled={this.state.imageURLs.length >= 4}
             onClick={() => {
               this.setState({ displayModal: "flex" });
             }}
+            style={{
+              display:
+                this.state.imageURLs.length >= 4 ? "none" : "inline-block",
+            }}
           >
-            {this.state.showUploadBox ? "Hide Uploader" : "Add Photos (max 4)"}
+            Add Photos
           </button>
         </div>
 
