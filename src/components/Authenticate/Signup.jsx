@@ -168,45 +168,52 @@ class Signup extends Component {
     }
     if (this.props.user) {
       return (
-        <div className={styles.signup_container}>
+        <div className={styles.login_container}>
           <div className={styles.main}>
             <div className={styles.profile_options}>
-              <h3 className={styles.option_title}>Set up your account</h3>
-              <div>
-                <label htmlFor="first_name">First Name</label>
+              <h2 className={styles.option_title}>Set Up Your Account</h2>
+              <div className={styles.setup_items}>
+                <label htmlFor="first_name" className={styles.setup_label}>
+                  First Name:
+                </label>
                 <input
                   type="text"
                   name="first_name"
                   onChange={this.handleChange}
-                  placeholder={"Enter your first name"}
+                  className={styles.setup_input}
                 />
                 <div className={styles.text_danger}>
                   {this.state.errors.first_name}
                 </div>
               </div>
 
-              <div>
-                <label htmlFor="last_initial">Last Initial</label>
+              <div className={styles.setup_items}>
+                <label htmlFor="last_initial" className={styles.setup_label}>
+                  Last Initial:
+                </label>
                 <input
                   type="text"
                   name="last_initial"
                   onChange={this.handleChange}
-                  placeholder="I"
                   maxLength="1"
+                  className={styles.setup_input}
                 />
                 <div className={styles.text_danger}>
                   {this.state.errors.last_initial}
                 </div>
               </div>
 
-              <div>
-                <label htmlFor="zipcode">Zipcode</label>
+              <div className={styles.setup_items}>
+                <label htmlFor="zipcode" className={styles.setup_label}>
+                  Zipcode:
+                </label>
                 <input
                   name="zipcode"
                   onChange={this.handleChange}
                   type="text"
                   pattern="[0-9]{5}"
                   placeholder="Five digit zip code"
+                  className={styles.setup_input}
                 />
                 <div className={styles.text_danger}>
                   {this.state.errors.zipcode}
@@ -214,47 +221,70 @@ class Signup extends Component {
               </div>
 
               <div>
-                <label htmlFor="interests">
-                  What are your interests? <br /> (separate by commas)
-                </label>
+                <label htmlFor="interests">What are your interests?</label>
                 <br />
+                <p className={styles.setup_desc}>(separate by commas)</p>
                 <textarea
                   rows="4"
                   cols="30"
                   name="interests"
                   onChange={this.handleChange}
                   placeholder="kites, SpongeBob, surfing, rocks"
+                  className={styles.setup_text_area}
                 />
               </div>
 
-              <div>
-                <label htmlFor="color">Pick a color</label>
-                <input type="color" name="color" onChange={this.handleChange} />
+              <div className={styles.setup_items}>
+                <label htmlFor="color" className={styles.setup_label}>
+                  Pick a color:
+                </label>
+                <input
+                  type="color"
+                  name="color"
+                  onChange={this.handleChange}
+                  className={styles.setup_color}
+                />
               </div>
 
-              <div>
-                <label htmlFor="birthdate">Birthday</label>
+              <div className={styles.setup_items}>
+                <label htmlFor="birthdate" className={styles.setup_label}>
+                  Birthday:
+                </label>
                 <input
                   type="date"
                   name="birthdate"
                   onChange={this.handleChange}
+                  className={styles.setup_input}
+                  style={{ width: "60%" }}
                 />
                 <div className={styles.text_danger}>
                   {this.state.errors.birthdate}
                 </div>
               </div>
 
-              <div>
-                <label htmlFor="gender">You are</label>
-                <input type="text" onChange={this.handleChange} name="gender" />
+              <div className={styles.setup_items}>
+                <label htmlFor="gender" className={styles.setup_label}>
+                  You are
+                </label>
+                <input
+                  type="text"
+                  onChange={this.handleChange}
+                  name="gender"
+                  className={styles.setup_input}
+                />
                 <div className={styles.text_danger}>
                   {this.state.errors.gender}
                 </div>
-                <label htmlFor="looking_for">looking for</label>
+              </div>
+              <div className={styles.setup_items}>
+                <label htmlFor="looking_for" className={styles.setup_label}>
+                  looking for
+                </label>
                 <input
                   type="text"
                   onChange={this.handleChange}
                   name="looking_for"
+                  className={styles.setup_input}
                 />
                 <div className={styles.text_danger}>
                   {this.state.errors.looking_for}
@@ -262,7 +292,13 @@ class Signup extends Component {
               </div>
 
               <div className={styles.centered_content}>
-                <button onClick={this.handleProfileSubmit}>Submit</button>
+                <br />
+                <button
+                  onClick={this.handleProfileSubmit}
+                  className={styles.form_submit}
+                >
+                  Submit
+                </button>
               </div>
             </div>
           </div>
