@@ -5,7 +5,6 @@ import "firebase/firestore";
 import "firebase/storage";
 
 import styles from "./Profile.module.css";
-import profileImage from "../../images/profile_2.png";
 import fillerImage from "../../images/nav_icons/image_temp.png";
 
 const yearMillis = 365.25 * 24 * 60 * 60 * 1000;
@@ -31,6 +30,7 @@ class Profile extends Component {
       profileIsLoaded: false,
       uploadSelection: null,
       showUploadBox: false,
+      displayModal: false,
       imageURLs: [],
       toast: {
         text: "",
@@ -50,9 +50,8 @@ class Profile extends Component {
   resetUploadArea = () => {
     document.getElementById("profilePhotoUploader").value = null;
     setTimeout(() => {
-      const newStatee = Object.assign(this.state, { toast: { text: "" } });
-      this.setState(newStatee);
-    }, 3000);
+      this.setState({ toast: { text: "" } });
+    }, 1500);
   };
 
   onFileChange = (event) => {
@@ -75,64 +74,59 @@ class Profile extends Component {
     return locationRef
       .put(file)
       .then(async (res) => {
-        //console.log(res, res.metadata?.name);
-        const newState = Object.assign(this.state, {
+        this.setState({
           toast: { text: "Successfully uploaded", success: true },
           uploadSelection: "",
+          displayModal: false,
         });
-        //newState.imageURLs.push(await res.getDownloadURL());
-        this.setState(newState);
-        await this.refreshImages(newState);
+        await this.refreshImages();
         this.resetUploadArea();
       })
       .catch((err) => {
         console.error(err);
-        const newState = Object.assign(this.state, {
+        this.setState({
           toast: { text: "Failed to upload: " + err, success: false },
           uploadSelection: "",
         });
-        this.setState(newState);
         this.resetUploadArea();
       });
   };
 
-  toggleUploadBox = () => {
-    const newState = Object.assign(this.state, {
-      showUploadBox: !this.state.showUploadBox,
-    });
-    this.setState(newState);
-  };
-
-  refreshImages = (newState) => {
-    newState.imageURLs = [];
+  refreshImages = () => {
+    let imageURLs = [];
     return firebase
       .storage()
       .ref()
       .child("/" + this.props.user.uid)
       .listAll()
       .then(async (res) => {
-        console.log(res.items);
-
         for (const item of res.items) {
           const url = await item.getDownloadURL().catch((err) => {
             console.error(err);
             return null;
           });
           if (url) {
-            newState.imageURLs.push(url);
+            imageURLs.push(url);
           }
         }
 
-        console.log(newState);
-        this.setState(newState);
+        this.setState({ imageURLs: imageURLs });
       })
       .catch((err) => {
         console.error(err);
-        this.setState(newState);
+        this.setState({ imageURLs: imageURLs });
       });
   };
 
   componentDidMount() {
+    // close modal if user clicks off
+    this.uploadModal = document.getElementById("uploaderModal");
+    window.onclick = (event) => {
+      if (event.target === this.uploadModal) {
+        this.setState({ displayModal: "none" });
+      }
+    };
+
     return firebase
       .firestore()
       .collection("users")
@@ -172,13 +166,13 @@ class Profile extends Component {
 
     return (
       <div className={styles.profile_container}>
-        <img src={profileImage} alt="profile" className={styles.profile_pic} />
         <p className={styles.name}>
           {userData.first_name} {userData.last_initial} <br />
           {userData.city}, {userData.state}
         </p>
         <p className={styles.basic}>
           {this.computeAge(userData.birthdate)} / {userData.gender} /{" "}
+          {" looking for "}
           {userData.looking_for}
         </p>
         <section className={styles.carousel} aria-label="Gallery">
@@ -297,48 +291,63 @@ class Profile extends Component {
             </ol>
           </aside>
         </section>
+
         <div className={styles.interests}>
           <h3 className={styles.interest_heading}>Interests</h3>
           <div className={styles.interest_scroll}>
-            <InterestList interests={userData.interests}></InterestList>
+            <InterestList interests={userData.interests} />
           </div>
         </div>
-        <button
-          className={styles.button}
-          disabled={this.state.imageURLs.length >= 4 ? "" : null}
-          onClick={this.toggleUploadBox}
+
+        <div className={styles.button_container}>
+          <button
+            className={styles.button}
+            disabled={this.state.imageURLs.length >= 4 ? "" : null}
+            onClick={() => {
+              this.setState({ displayModal: "flex" });
+            }}
+          >
+            {this.state.showUploadBox ? "Hide Uploader" : "Add Photos (max 4)"}
+          </button>
+        </div>
+
+        <div
+          id={"uploaderModal"}
+          className={styles.modal}
+          style={{ display: this.state.displayModal }}
         >
-          {this.state.showUploadBox ? "Hide Uploader" : "Add Photos (max 4)"}
-        </button>
-        {this.state.showUploadBox ? (
-          <div className={styles.button_container}>
-            <div className={styles.upload_container}>
-              {this.state.uploadSelection ? (
-                <button
-                  className={styles.upload_button}
-                  onClick={this.uploadPhoto}
-                >
-                  Upload {this.state.uploadSelection}
-                </button>
-              ) : (
-                <p>Select a photo to upload below:</p>
-              )}
-              <input
-                type="file"
-                accept="image/png"
-                id="profilePhotoUploader"
-                onChange={this.onFileChange}
-              ></input>
-            </div>
+          <div className={styles.modalContent}>
+            {this.state.uploadSelection ? (
+              <button className={styles.button} onClick={this.uploadPhoto}>
+                Upload {this.state.uploadSelection}
+              </button>
+            ) : (
+              <p>Select a photo to upload</p>
+            )}
+            <label
+              htmlFor={"profilePhotoUploader"}
+              className={styles.button}
+              style={{
+                display: this.state.uploadSelection ? "none" : "block",
+                margin: "auto",
+              }}
+            >
+              Upload File
+            </label>
+            <input
+              type="file"
+              accept="image/png"
+              id="profilePhotoUploader"
+              onChange={this.onFileChange}
+            />
           </div>
-        ) : (
-          ""
-        )}
+        </div>
+
         <section className={styles.toastSection}>
           <Toast
             text={this.state.toast?.text}
             success={this.state.toast?.success}
-          ></Toast>
+          />
         </section>
       </div>
     );

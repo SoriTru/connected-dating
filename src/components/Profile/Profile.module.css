@@ -2,17 +2,14 @@
   display: grid;
   height: 100%;
   width: 80%;
-  margin: 0 1em;
-  grid-template-columns: 1fr 1fr 1fr;
   grid-template-rows: min-content min-content auto auto min-content;
   grid-template-areas:
-    "pic name name"
-    "pic basic basic"
-    "photos photos photos"
-    "interests interests interests"
-    "buttons buttons buttons";
-  margin-top: 1.5em;
-  margin-bottom: 1.5em;
+    "name"
+    "basic"
+    "photos"
+    "interests"
+    "buttons";
+  margin: 1.5em 1em;
 }
 
 .profile_pic {
@@ -26,12 +23,17 @@
 .name {
   grid-area: name;
   margin: 0;
+  text-align: center;
+  padding-bottom: 0.5em;
+  color: #0a2342;
 }
 
 .basic {
   grid-area: basic;
   margin: 0;
-  padding-bottom: 10px;
+  padding-bottom: 2em;
+  text-align: center;
+  color: #0a2342;
 }
 
 /*region carousel*/
@@ -136,11 +138,7 @@ li {
   position: relative;
   flex: 0 0 100%;
   width: 100%;
-  background-color: #f99;
-}
-
-.carousel_slide:nth-child(even) {
-  background-color: #99f;
+  background: transparent;
 }
 
 .carousel_slide:before {
@@ -271,15 +269,21 @@ li {
   text-align: center;
   display: flex;
   flex-direction: column;
+  border: 2px solid #0a2342;
+  padding: 0 4em;
+  width: fit-content;
+  justify-self: center;
 }
 
 .interest_scroll {
   flex: 1 0 1px;
   overflow-y: auto;
+  color: #0a2342;
 }
 
 .interest_heading {
   margin: 0;
+  color: #0a2342;
 }
 
 .button_container {
@@ -287,15 +291,20 @@ li {
   display: flex;
   justify-content: space-evenly;
   align-items: center;
+  margin: 1em;
 }
 
 .button {
-  width: 20ch;
-}
-
-.upload_container {
-  position: fixed;
-  width: 20%;
+  width: min(75%, 300px);
+  font-weight: bold;
+  padding: 5px;
+  margin: 0;
+  text-align: center;
+  background: #fffffa;
+  color: #0a2342;
+  border-radius: 25px;
+  border: 0;
+  font-size: small;
 }
 
 .toastSection {
@@ -311,16 +320,50 @@ li {
 .toast {
   position: relative;
   bottom: 20%;
-  height: 30px;
+  height: 40px;
   text-align: center;
-  background-color: #222;
-  color: #fff;
+  background-color: #0a2342;
+  border-radius: 25px;
+  display: flex;
+  align-content: center;
 }
 
 .toastTextSuccess {
-  color: #0f0;
+  color: #fffffa;
+  margin: auto;
 }
 
 .toastTextFailure {
-  color: #f00;
+  color: #df183d;
+  margin: auto;
 }
+
+/* region modal */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.4);
+  justify-content: center;
+  align-items: center;
+}
+
+.modalContent {
+  font-family: sans-serif;
+  background-color: #a3a5dc;
+  border-radius: 15px;
+  padding: 20px;
+  width: 80%;
+  border: 1px solid #888;
+  text-align: center;
+}
+
+input[type="file"] {
+  display: none;
+}
+/* endregion */
