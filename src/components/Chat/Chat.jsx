@@ -6,6 +6,7 @@ import styles from "./Chat.module.css";
 import ChatInfo from "../ChatInfo/ChatInfo";
 import profileImage from "../../images/nav_icons/image_temp.png";
 import hands from "../../images/art/hands.png";
+import sendButton from "../../images/art/send.png";
 
 class Chat extends Component {
   constructor(props) {
@@ -236,10 +237,13 @@ class Chat extends Component {
             onClick={() => {
               this.setState({ isOverview: true, otherUser: null });
             }}
+            className={styles.button}
           >
             Go Back
           </button>
-          <button onClick={this.matchWithUser}>Match!</button>
+          <button onClick={this.matchWithUser} className={styles.button}>
+            Match!
+          </button>
         </div>
         <div className={styles.overflow_container}>
           {this.state.messageData && this.renderMessages()}
@@ -252,7 +256,7 @@ class Chat extends Component {
             placeholder={"say something nice"}
           />
           <button className={styles.form_submit} type={"submit"}>
-            🕊️
+            <img src={sendButton} alt={"send"} className={styles.send_button} />
           </button>
         </form>
       </div>

@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Route, Switch } from "react-router-dom";
 
 import styles from "./Home.module.css";
+import decoratingCherub from "../../images/art/decorating_cherub.png";
 
 import BottomNav from "../BottomNav/BottomNav";
 import TopNav from "../TopNav/TopNav";
@@ -32,7 +33,16 @@ class Home extends Component {
         <div className={styles.main}>
           <Switch>
             <Route exact path="/home">
-              Home
+              <div className={styles.home_content}>
+                <img
+                  src={decoratingCherub}
+                  alt={"decorating cherub"}
+                  className={styles.graphic}
+                />
+                <h1 className={styles.home_title}>Welcome to</h1>
+                <br />
+                <h1 className={styles.home_title}>Connected Dating!</h1>
+              </div>
             </Route>
             <Route exact path="/home/dates">
               <Dates user={this.props.user} />

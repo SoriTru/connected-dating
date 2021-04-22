@@ -23,12 +23,18 @@ export default class VideoChat extends Component {
               {this.props.isCallStarted ? (
                 <div />
               ) : (
-                <button onClick={async () => await this.props.startCall()}>
+                <button
+                  onClick={async () => await this.props.startCall()}
+                  className={styles.button}
+                >
                   start call
                 </button>
               )}
 
-              <button onClick={async () => await this.props.endCall()}>
+              <button
+                onClick={async () => await this.props.endCall()}
+                className={styles.button}
+              >
                 end call
               </button>
             </div>
@@ -53,8 +59,11 @@ export default class VideoChat extends Component {
             className={styles.video}
           />
         </div>
-        <div>
-          <button onClick={async () => await this.props.matchWithUser()}>
+        <div className={styles.match_button}>
+          <button
+            onClick={async () => await this.props.matchWithUser()}
+            className={styles.button}
+          >
             Match!
           </button>{" "}
         </div>

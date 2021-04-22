@@ -12,3 +12,18 @@
   align-items: center;
   justify-content: center;
 }
+
+.graphic {
+  width: 100%;
+  max-width: 600px;
+}
+
+.home_content {
+  width: 100%;
+}
+
+.home_title {
+  color: #fffffa;
+  text-align: center;
+  margin: 0;
+}

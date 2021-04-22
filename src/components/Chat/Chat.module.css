@@ -1,6 +1,7 @@
 .chat_box {
   display: grid;
-  width: 80%;
+  width: 90%;
+  max-width: 400px;
   height: 100%;
   grid-template-columns: 1fr;
   grid-template-rows: min-content 1fr auto;
@@ -14,7 +15,21 @@
 
 .button_area {
   grid-area: buttons;
+  justify-self: center;
+  align-self: center;
+  width: 100%;
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.button {
+  font-weight: bold;
+  padding: 0.5em 3em;
   text-align: center;
+  background: #fffffa;
+  color: #0a2342;
+  border-radius: 25px;
+  border: 0;
 }
 
 .overflow_container {
@@ -66,6 +81,8 @@
 .text_form {
   grid-area: input;
   width: 100%;
+  display: flex;
+  align-items: center;
 }
 
 .form_input {
@@ -75,25 +92,31 @@
   outline: none;
   border: none;
   padding: 0 10px;
+  margin: 0;
+  border-radius: 25px 0 0 25px;
 }
 
 .form_submit {
-  background-color: #282c34; /* Green */
+  background-color: #a3a5dc;
   border: none;
-  color: white;
   height: 2em;
   width: 20%;
   text-align: center;
-  text-decoration: none;
   display: inline-block;
   cursor: pointer;
   font-size: 1.25rem;
   padding: 0;
+  margin: 0;
+  border-radius: 0 25px 25px 0;
 }
 
 .form_submit:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+.send_button {
+  height: 2em;
 }
 
 .graphic {

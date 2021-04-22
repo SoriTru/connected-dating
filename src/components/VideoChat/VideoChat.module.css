@@ -2,18 +2,36 @@
   display: grid;
   height: 100%;
   width: 80%;
-  grid-template-columns: 1fr;
-  grid-template-rows: min-content auto 1fr;
+  grid-template-rows: min-content auto 1fr min-content;
   grid-template-areas:
     "buttons"
     "remotevid"
-    "localvid";
+    "localvid"
+    "matchbutton";
 }
 
 .buttons {
   grid-area: buttons;
   justify-self: center;
   align-self: center;
+}
+
+.button {
+  font-weight: bold;
+  padding: 5px 20px;
+  margin: 15px 1em;
+  text-align: center;
+  background: #fffffa;
+  color: #0a2342;
+  text-decoration: none;
+  border-radius: 25px;
+  border: 0;
+}
+
+.match_button {
+  grid-area: matchbutton;
+  justify-self: center;
+  margin: 0;
 }
 
 .remotevideo {
