@@ -2,6 +2,7 @@
   display: grid;
   height: 100%;
   width: 80%;
+  max-width: 500px;
   grid-template-rows: min-content auto 1fr min-content;
   grid-template-areas:
     "buttons"

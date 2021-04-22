@@ -75,9 +75,8 @@ class Signup extends Component {
           this.state.input.password
         )
         .catch((error) => {
-          // TODO: process error and alert user
           console.warn(error.code);
-          alert(error.message);
+          alert("Error signing up!\n" + error.message);
         });
     }
   };

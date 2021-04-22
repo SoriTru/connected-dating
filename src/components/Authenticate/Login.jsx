@@ -35,9 +35,8 @@ class Login extends Component {
           this.state.input.password
         )
         .catch((error) => {
-          // TODO: process error and alert user
-          console.log(error.code);
-          console.log(error.message);
+          alert("Error logging in!\n" + error.message);
+          console.warn(error.code);
         });
     }
   };
