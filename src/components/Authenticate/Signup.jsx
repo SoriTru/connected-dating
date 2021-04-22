@@ -262,7 +262,6 @@ class Signup extends Component {
                   onChange={this.handleChange}
                   type="text"
                   pattern="[0-9]{5}"
-                  placeholder="Five digit zip code"
                   className={styles.setup_input}
                   value={this.state.input.zipcode || ""}
                 />
@@ -393,7 +392,6 @@ class Signup extends Component {
                 name="password"
                 onChange={this.handleChange}
                 className={styles.form_input}
-                placeholder={"Must be at least 7 characters"}
                 id="password"
               />
               <div className={styles.text_danger}>

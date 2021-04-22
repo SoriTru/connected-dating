@@ -81,7 +81,6 @@ class Login extends Component {
                 // value={this.state.input.username}
                 onChange={this.handleChange}
                 className={styles.form_input}
-                placeholder="Enter your email"
                 id="email"
               />
               <div className={styles.text_danger}>
@@ -97,7 +96,6 @@ class Login extends Component {
                 // value={this.state.input.password}
                 onChange={this.handleChange}
                 className={styles.form_input}
-                placeholder="*********"
                 id="password"
               />
               <div className={styles.text_danger}>
