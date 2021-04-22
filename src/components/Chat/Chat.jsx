@@ -5,6 +5,7 @@ import "firebase/firestore";
 import styles from "./Chat.module.css";
 import ChatInfo from "../ChatInfo/ChatInfo";
 import profileImage from "../../images/nav_icons/image_temp.png";
+import hands from "../../images/art/hands.png";
 
 class Chat extends Component {
   constructor(props) {
@@ -214,7 +215,16 @@ class Chat extends Component {
   render() {
     if (this.state.isOverview) {
       return (
-        <div className={styles.chat_overview}>{this.renderChatOverview()}</div>
+        <div className={styles.overview_container}>
+          <div className={styles.chat_overview}>
+            {this.renderChatOverview()}
+          </div>
+          <img
+            src={hands}
+            alt={"hands holding heart"}
+            className={styles.graphic}
+          />
+        </div>
       );
     }
 

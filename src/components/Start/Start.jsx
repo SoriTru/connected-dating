@@ -43,14 +43,9 @@ class Start extends Component {
           <p onClick={() => this.chooseLink(false)} className={styles.link}>
             About
           </p>
-          <p
-            onClick={() => {
-              this.chooseLink(true);
-            }}
-            className={styles.link}
-          >
-            Our Team
-          </p>
+          <a href={"https://madivandoren.com"} className={styles.link}>
+            Artwork
+          </a>
         </div>
       </div>
     );

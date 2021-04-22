@@ -1,23 +1,27 @@
 .selfQRContainer {
-  color: navy;
+  color: #0a2342;
   text-align: center;
+  width: 60%;
+  max-width: 300px;
 }
 .scanButton {
-  background-color: blueviolet;
-  border: none;
-  color: white;
+  background-color: #fffffa;
+  border: 0;
+  color: #0a2342;
+  font-weight: bold;
   text-align: center;
   text-decoration: none;
   display: inline-block;
   cursor: pointer;
   font-size: 1.25rem;
   padding: 10px;
-  border-radius: 5px;
-  box-shadow: 0 0 3px #000;
+  border-radius: 25px;
+  margin: 1em 0;
 }
 .scannerContainer {
-  min-width: 512px;
   text-align: center;
+  width: 70%;
+  max-width: 300px;
 }
 .qrOverlay {
   position: absolute;

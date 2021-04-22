@@ -12,8 +12,6 @@ class Dates extends Component {
   constructor(props) {
     super(props);
 
-    this.dummy = React.createRef();
-
     this.state = {
       isScanning: false,
       isLoading: true,
@@ -132,7 +130,6 @@ class Dates extends Component {
 
   handleScan = (data) => {
     if (this.state.isLoading) return;
-    //console.log(data);
     if (uidRegex.test(data)) {
       this.setState({
         isScanning: true,
@@ -158,7 +155,7 @@ class Dates extends Component {
   render() {
     return this.state.isScanning ? (
       <div className={styles.scannerContainer}>
-        <h3>Scanner</h3>
+        <h3 style={{ color: "#0a2342" }}>Scanner</h3>
         <QrReader
           delay={500}
           onError={this.handleError}
@@ -188,9 +185,9 @@ class Dates extends Component {
           fgColor="#000000"
           level="Q"
           style={{ width: 256 }}
-          value="big chungus"
+          value={this.props.user.uid}
         />
-        <br></br>
+        <br />
         <button className={styles.scanButton} onClick={this.openScanner}>
           Scan QR Code
         </button>
