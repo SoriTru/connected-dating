@@ -6,6 +6,7 @@ import "firebase/firestore";
 
 import styles from "./Authenticate.module.css";
 import cupid from "../../images/art/confetti_cupid.png";
+import logo from "../../images/cnd_plain_logo.png";
 
 class Signup extends Component {
   constructor(props) {
@@ -367,11 +368,29 @@ class Signup extends Component {
 
     return (
       <div className={styles.signup_container}>
-        <div className={styles.img_container}>
-          <img alt={"cupid"} src={cupid} className={styles.graphic} />
-        </div>
         <div className={styles.main}>
-          <h1 style={{ color: "#fffffa", margin: 0 }}>Sign Up</h1>
+          <div className={styles.header}>
+            <img
+              alt="logo"
+              src={logo}
+              className={styles.logo_image}
+              onClick={() => {
+                window.location.href = "/";
+              }}
+            />
+            <h1 className={styles.title}>Sign Up</h1>
+            {/*this is not the ideal fix, but this second image is in here so that the title is positioned correctly*/}
+            {/*TODO: use absolute positioning, maybe?*/}
+            <img
+              alt="logo"
+              src={logo}
+              className={styles.logo_image}
+              style={{ visibility: "hidden" }}
+            />
+          </div>
+          <div className={styles.img_container}>
+            <img alt={"cupid"} src={cupid} className={styles.graphic} />
+          </div>
           <form onSubmit={this.handleSignup} noValidate>
             <div className={styles.form_group}>
               <label htmlFor="email">Email:</label>

@@ -4,6 +4,7 @@ import "firebase/auth";
 
 import styles from "./Authenticate.module.css";
 import flower from "../../images/art/white_flower.png";
+import logo from "../../images/cnd_plain_logo.png";
 
 class Login extends Component {
   constructor(props) {
@@ -68,9 +69,27 @@ class Login extends Component {
 
   render() {
     return (
-      <div className={styles.login_container}>
+      <div className={styles.signup_container}>
         <div className={styles.main}>
-          <h1 style={{ color: "#fffffa" }}>Log In</h1>
+          <div className={styles.header}>
+            <img
+              alt="logo"
+              src={logo}
+              className={styles.logo_image}
+              onClick={() => {
+                window.location.href = "/";
+              }}
+            />
+            <h1 className={styles.title}>Log In</h1>
+            {/*this is not the ideal fix, but this second image is in here so that the title is positioned correctly*/}
+            {/*TODO: use absolute positioning, maybe?*/}
+            <img
+              alt="logo"
+              src={logo}
+              className={styles.logo_image}
+              style={{ visibility: "hidden" }}
+            />
+          </div>
           <form onSubmit={this.handleSubmit} noValidate>
             <div className={styles.form_group}>
               <label htmlFor="email">Email:</label>

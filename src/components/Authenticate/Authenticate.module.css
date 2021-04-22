@@ -16,7 +16,7 @@ label {
   background-color: #a3a5dc;
   min-height: 100%;
   display: grid;
-  grid-template-rows: 1fr auto;
+  grid-template-rows: auto 1fr auto;
 }
 
 .signup_container {
@@ -24,7 +24,7 @@ label {
   /*background-color: #a3a5dc;*/
   min-height: 100%;
   display: grid;
-  grid-template-rows: auto 1fr;
+  grid-template-rows: auto auto 1fr;
 }
 
 .form_group {
@@ -132,4 +132,26 @@ label {
   border: 0;
   height: 2em;
   width: 50%;
+}
+
+.header {
+  width: 100%;
+  height: 15vh;
+  background-color: #a3a5dc;
+  display: flex;
+}
+
+.logo_image {
+  max-width: 100%;
+  max-height: 100%;
+  margin: 15px;
+  padding: 5px;
+}
+
+.title {
+  color: #fffffa;
+  width: 100%;
+  margin: auto;
+  padding: 10px;
+  text-align: center;
 }
