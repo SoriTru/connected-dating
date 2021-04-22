@@ -284,6 +284,9 @@ class Signup extends Component {
                   value={this.state.input.interests || ""}
                 />
               </div>
+              <div className={styles.text_danger}>
+                {this.state.errors.interests}
+              </div>
 
               <div className={styles.setup_items}>
                 <label htmlFor="color" className={styles.setup_label}>
