@@ -47,7 +47,7 @@ class Home extends Component {
             <Route exact path="/home/dates">
               <Dates user={this.props.user} />
             </Route>
-            <Route exact path="/home/video">
+            <Route exact path="/home/roulette">
               <Roulette user={this.props.user} />
             </Route>
             <Route exact path="/home/chat">

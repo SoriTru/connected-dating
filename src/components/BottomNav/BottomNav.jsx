@@ -19,8 +19,8 @@ class BottomNav extends Component {
         <Link to="/home/dates" className={styles.nav_item}>
           <img src={dateIcon} className={styles.icon} alt="Date" />
         </Link>
-        <Link to="/home/video" className={styles.nav_item}>
-          <img src={videoIcon} className={styles.icon} alt="Video" />
+        <Link to="/home/roulette" className={styles.nav_item}>
+          <img src={videoIcon} className={styles.icon} alt="Roulette" />
         </Link>
         <Link to="/home" className={styles.nav_item}>
           <img src={homeIcon} className={styles.icon} alt="Home" />
